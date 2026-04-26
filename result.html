@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>結果 - 問題集</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-container">
+
+    <div class="card shadow-sm mb-4">
+      <div class="card-body text-center py-4">
+        <div class="text-muted mb-1" id="quiz-title"></div>
+        <div class="score-display mb-1">
+          <span id="score-correct"></span>
+          <span class="fs-4 text-muted"> / </span>
+          <span id="score-total"></span>
+          <span class="fs-4 text-muted"> 問正解</span>
+        </div>
+        <div class="fs-5 text-muted">正答率：<span id="score-rate"></span>%</div>
+      </div>
+    </div>
+
+    <!-- 正誤一覧 -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header fw-bold">問題ごとの結果</div>
+      <div class="card-body p-0">
+        <table class="table table-sm mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>問題番号</th>
+              <th>結果</th>
+              <th>選択</th>
+              <th>正解</th>
+            </tr>
+          </thead>
+          <tbody id="result-list"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a href="index.html" class="btn btn-primary">問題集の選択に戻る</a>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    $(function () {
+      const quizId = getParam('set');
+      if (!quizId) { location.href = 'index.html'; return; }
+
+      const meta = QUIZ_LIST.find(function (q) { return q.id === quizId; });
+      if (!meta) { location.href = 'index.html'; return; }
+
+      $('#quiz-title').text(meta.title);
+
+      fetch(meta.file)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          const questions = data.questions;
+          const progress = loadProgress(quizId);
+          const summary = calcSummary(quizId, questions);
+
+          $('#score-correct').text(summary.correct);
+          $('#score-total').text(summary.total);
+          $('#score-rate').text(
+            summary.total > 0 ? Math.round(summary.correct / summary.total * 100) : 0
+          );
+
+          const $tbody = $('#result-list');
+          questions.forEach(function (q) {
+            const rec = progress[String(q.id)];
+            const answered = rec && rec.answered;
+            const correct = answered && rec.correct;
+            const selected = answered ? (Array.isArray(rec.selected) ? rec.selected.join('・') : rec.selected) : '―';
+            const answer = Array.isArray(q.answer) ? q.answer.join('・') : q.answer;
+
+            $tbody.append(
+              '<tr class="' + (answered ? (correct ? 'table-success' : 'table-danger') : '') + '">' +
+              '<td>問題 ' + q.id + '</td>' +
+              '<td>' + (answered ? (correct ? '✅ 正解' : '❌ 不正解') : '─ 未回答') + '</td>' +
+              '<td>' + $('<span>').text(selected).html() + '</td>' +
+              '<td>' + $('<span>').text(answer).html() + '</td>' +
+              '</tr>'
+            );
+          });
+        })
+        .catch(function () {
+          alert('データの読み込みに失敗しました。');
+          location.href = 'index.html';
+        });
+    });
+  </script>
+</body>
+</html>

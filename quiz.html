@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>問題集</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-container">
+
+    <!-- ヘッダー -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <a href="index.html" class="btn btn-sm btn-outline-secondary">← 問題集選択に戻る</a>
+      <div class="d-flex align-items-center gap-2">
+        <span id="review-mode-badge" class="badge bg-warning text-dark d-none">復習モード</span>
+        <span id="quiz-title" class="fw-bold text-muted small"></span>
+      </div>
+    </div>
+
+    <!-- 廃止警告（deprecated のときのみ表示） -->
+    <div id="deprecated-alert" class="alert alert-warning d-none" role="alert">
+      ⚠️ <span id="deprecated-note"></span>
+    </div>
+
+    <!-- 問題カード -->
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+
+        <!-- 問題番号・選択形式 -->
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span id="question-index" class="badge bg-secondary"></span>
+          <span id="question-type-badge" class="badge bg-primary"></span>
+        </div>
+
+        <!-- 問題文 -->
+        <div id="question-text" class="question-text mb-4"></div>
+
+        <!-- 選択肢 -->
+        <div id="choices" class="d-grid gap-2"></div>
+
+      </div>
+    </div>
+
+    <!-- 採点結果メッセージ -->
+    <div id="result-message" class="alert d-none mb-3" role="alert"></div>
+
+    <!-- 解説 -->
+    <div id="explanation-card" class="card shadow-sm mb-3 d-none">
+      <div class="card-header fw-bold">解答・解説</div>
+      <div class="card-body">
+        <div id="explanation-answer" class="mb-2"></div>
+        <div id="explanation-text" class="mb-3"></div>
+        <div id="explanation-table-wrap"></div>
+      </div>
+    </div>
+
+    <!-- 前後ナビゲーション -->
+    <div class="d-flex justify-content-between mb-4">
+      <button id="btn-prev" class="btn btn-outline-secondary" disabled>← 前の問題</button>
+      <button id="btn-next" class="btn btn-primary" disabled>次の問題 →</button>
+    </div>
+
+    <!-- 問題番号一覧 -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="small text-muted mb-2">問題一覧</div>
+        <div id="question-nav" class="question-nav-grid"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    $(function () {
+      const quizId = getParam('set');
+      if (!quizId) { location.href = 'index.html'; return; }
+
+      const meta = QUIZ_LIST.find(function (q) { return q.id === quizId; });
+      if (!meta) { location.href = 'index.html'; return; }
+
+      const isReviewMode = getParam('mode') === 'review';
+
+      $('#quiz-title').text(meta.title);
+      if (isReviewMode) {
+        $('#review-mode-badge').removeClass('d-none');
+      }
+
+      let questions = [];
+      let currentIndex = 0;
+      let progress = {};   // { "questionId": { answered, correct, selected } }
+
+      // ── JSON 読み込み ──────────────────────────────
+      fetch(meta.file)
+        .then(function (r) {
+          if (!r.ok) throw new Error('fetch failed');
+          return r.json();
+        })
+        .then(function (data) {
+          progress = loadProgress(quizId);
+          const allQuestions = data.questions.filter(function (q) { return !q.skip; });
+
+          if (isReviewMode) {
+            questions = allQuestions.filter(function (q) {
+              const rec = progress[String(q.id)];
+              return rec && rec.answered && !rec.correct;
+            });
+            if (questions.length === 0) {
+              alert('復習する問題がありません。');
+              location.href = 'index.html';
+              return;
+            }
+          } else {
+            questions = allQuestions;
+          }
+
+          buildNav();
+          showQuestion(0);
+        })
+        .catch(function () {
+          alert('問題データの読み込みに失敗しました。');
+          location.href = 'index.html';
+        });
+
+      // ── 問題表示 ────────────────────────────────────
+      function showQuestion(index) {
+        currentIndex = index;
+        const q = questions[index];
+        const rec = progress[String(q.id)];
+
+        // 廃止警告
+        if (q.deprecated) {
+          $('#deprecated-alert').removeClass('d-none');
+          $('#deprecated-note').text(q.deprecation_note || '廃止・出題注意の問題です。');
+        } else {
+          $('#deprecated-alert').addClass('d-none');
+        }
+
+        // 問題番号・形式
+        $('#question-index').text('問題 ' + (index + 1) + ' / ' + questions.length);
+        const typeLabel = q.type === 'multiple'
+          ? (q.answer_count || 2) + 'つ選択'
+          : '一つ選択';
+        $('#question-type-badge').text(typeLabel);
+
+        // 問題文（改行を保持）
+        $('#question-text').text(q.question);
+
+        // 選択肢生成
+        const $choices = $('#choices').empty();
+        q.choices.forEach(function (c) {
+          const $btn = $('<button>')
+            .addClass('btn btn-outline-secondary choice-btn')
+            .attr('data-label', c.label)
+            .text(c.label + '. ' + c.text);
+          $choices.append($btn);
+        });
+
+        // 複数選択問題の「採点する」ボタン
+        if (q.type === 'multiple') {
+          const $gradeBtn = $('<button>')
+            .attr('id', 'btn-grade')
+            .addClass('btn btn-success mt-2')
+            .prop('disabled', true)
+            .text('採点する（0 / ' + (q.answer_count || 2) + ' 選択）');
+          $choices.append($gradeBtn);
+        } else {
+          $('#btn-grade').remove();
+        }
+
+        // 結果・解説をリセット
+        $('#result-message').addClass('d-none').removeClass('alert-success alert-danger').text('');
+        $('#explanation-card').addClass('d-none');
+        $('#btn-prev').prop('disabled', index === 0);
+        $('#btn-next').prop('disabled', true).text(
+          index === questions.length - 1 ? '結果を見る' : '次の問題 →'
+        );
+
+        // 解答済みなら前回状態を復元
+        if (rec && rec.answered) {
+          applyResult(q, rec.selected, false);
+        }
+
+        updateNav();
+      }
+
+      // ── 採点・解説表示 ──────────────────────────────
+      function applyResult(q, selected, doSave) {
+        const correctAnswer = q.answer;
+
+        // single: string / multiple: array
+        const isCorrect = Array.isArray(correctAnswer)
+          ? (Array.isArray(selected) &&
+             selected.length === correctAnswer.length &&
+             correctAnswer.every(function (a) { return selected.includes(a); }))
+          : selected === correctAnswer;
+
+        // 選択肢ハイライト
+        $('#choices .choice-btn').each(function () {
+          const label = $(this).data('label');
+          $(this).prop('disabled', true).removeClass('btn-outline-secondary');
+          const isCorrectChoice = Array.isArray(correctAnswer)
+            ? correctAnswer.includes(label)
+            : label === correctAnswer;
+          const isSelected = Array.isArray(selected)
+            ? selected.includes(label)
+            : label === selected;
+
+          if (isCorrectChoice) {
+            $(this).addClass('btn-success');
+          } else if (isSelected && !isCorrectChoice) {
+            $(this).addClass('btn-danger');
+          } else {
+            $(this).addClass('btn-outline-secondary');
+          }
+        });
+
+        // 結果メッセージ
+        const $msg = $('#result-message').removeClass('d-none alert-success alert-danger');
+        if (isCorrect) {
+          $msg.addClass('alert-success').text('正解です！');
+        } else {
+          const correctLabel = Array.isArray(correctAnswer)
+            ? correctAnswer.join('、')
+            : correctAnswer;
+          $msg.addClass('alert-danger').text('不正解です。正解は ' + correctLabel + ' です。');
+        }
+
+        // 解説
+        const answerLabel = Array.isArray(correctAnswer) ? correctAnswer.join('・') : correctAnswer;
+        $('#explanation-answer').html(
+          '<span class="fw-bold">正解：</span> <span class="badge bg-success fs-6">' +
+          $('<span>').text(answerLabel).html() + '</span>'
+        );
+        $('#explanation-text').text(q.explanation);
+
+        if (q.explanation_table && q.explanation_table.length > 0) {
+          let rows = '';
+          q.explanation_table.forEach(function (row) {
+            rows +=
+              '<tr>' +
+              '<td>' + $('<span>').text(row.label).html() + '</td>' +
+              '<td>' + $('<span>').text(row.text).html() + '</td>' +
+              '<td class="' + (row.correct ? 'text-success fw-bold' : 'text-danger') + '">' +
+              (row.correct ? '✅ 正解' : '❌') + '</td>' +
+              '</tr>';
+          });
+          $('#explanation-table-wrap').html(
+            '<table class="table table-bordered table-sm explanation-table">' +
+            '<thead class="table-light"><tr><th>選択肢</th><th>説明</th><th>正否</th></tr></thead>' +
+            '<tbody>' + rows + '</tbody></table>'
+          );
+        } else {
+          $('#explanation-table-wrap').empty();
+        }
+
+        $('#explanation-card').removeClass('d-none');
+        $('#btn-next').prop('disabled', false);
+        $('#btn-grade').remove();
+
+        // localStorage に保存
+        if (doSave) {
+          progress[String(q.id)] = { answered: true, correct: isCorrect, selected: selected };
+          saveProgress(quizId, progress);
+          updateNav();
+        }
+      }
+
+      // ── 選択肢クリック ──────────────────────────────
+      $('#choices').on('click', '.choice-btn', function () {
+        if ($(this).prop('disabled')) return;
+        const q = questions[currentIndex];
+
+        if (q.type === 'multiple') {
+          const answerCount = q.answer_count || 2;
+          const isSelected = $(this).hasClass('btn-primary');
+
+          if (isSelected) {
+            // 解除
+            $(this).removeClass('btn-primary').addClass('btn-outline-secondary');
+          } else {
+            // 選択済み数が上限に達していたら無視
+            const currentSelected = $('#choices .choice-btn.btn-primary').length;
+            if (currentSelected >= answerCount) return;
+            $(this).removeClass('btn-outline-secondary').addClass('btn-primary');
+          }
+
+          // 採点ボタンの有効/無効・テキスト更新
+          const selectedCount = $('#choices .choice-btn.btn-primary').length;
+          $('#btn-grade')
+            .prop('disabled', selectedCount !== answerCount)
+            .text('採点する（' + selectedCount + ' / ' + answerCount + ' 選択）');
+
+        } else {
+          // single: 即時採点
+          const selected = $(this).data('label');
+          applyResult(q, selected, true);
+        }
+      });
+
+      // ── 採点ボタン（複数選択用）──────────────────────
+      $('#choices').on('click', '#btn-grade', function () {
+        if ($(this).prop('disabled')) return;
+        const q = questions[currentIndex];
+        const selected = [];
+        $('#choices .choice-btn.btn-primary').each(function () {
+          selected.push($(this).data('label'));
+        });
+        applyResult(q, selected, true);
+      });
+
+      // ── ナビゲーションボタン ────────────────────────
+      $('#btn-prev').on('click', function () {
+        if (currentIndex > 0) showQuestion(currentIndex - 1);
+      });
+
+      $('#btn-next').on('click', function () {
+        if (currentIndex < questions.length - 1) {
+          showQuestion(currentIndex + 1);
+        } else {
+          // 結果画面へ
+          const summary = calcSummary(quizId, questions);
+          location.href = 'result.html?set=' + encodeURIComponent(quizId) +
+            '&correct=' + summary.correct +
+            '&total=' + summary.total;
+        }
+      });
+
+      // ── 問題番号ナビ ────────────────────────────────
+      function buildNav() {
+        const $nav = $('#question-nav').empty();
+        questions.forEach(function (q, i) {
+          const $btn = $('<button>')
+            .addClass('btn btn-outline-secondary q-nav-btn')
+            .attr('data-index', i)
+            .text(q.id);
+          $nav.append($btn);
+        });
+
+        $nav.on('click', '.q-nav-btn', function () {
+          showQuestion(parseInt($(this).data('index')));
+        });
+      }
+
+      function updateNav() {
+        $('#question-nav .q-nav-btn').each(function () {
+          const i = parseInt($(this).data('index'));
+          const q = questions[i];
+          const rec = progress[String(q.id)];
+          $(this)
+            .removeClass('btn-outline-secondary btn-success btn-danger current')
+            .toggleClass('current', i === currentIndex);
+
+          if (rec && rec.answered) {
+            $(this).addClass(rec.correct ? 'btn-success' : 'btn-danger');
+          } else {
+            $(this).addClass('btn-outline-secondary');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

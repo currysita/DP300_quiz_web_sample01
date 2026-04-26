@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>問題集</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="page-container">
+
+    <div class="mb-4">
+      <h1 class="h3 fw-bold mb-1">問題集</h1>
+      <p class="text-muted mb-0">解きたい問題集を選んでください。</p>
+    </div>
+
+    <div id="quiz-list">
+      <!-- app.js が動的に生成 -->
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="app.js"></script>
+  <script>
+    $(function () {
+      const $list = $('#quiz-list');
+
+      function loadCard(quiz) {
+        fetch(quiz.file)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            const questions = data.questions.filter(function (q) { return !q.skip; });
+            renderCard(quiz, questions);
+          })
+          .catch(function () {
+            renderCard(quiz, null);
+          });
+      }
+
+      function renderCard(quiz, questions) {
+        // 既存カードを削除（リセット後の再描画で使用）
+        $list.find('[data-quiz-id="' + quiz.id + '"]').remove();
+
+        const summary = questions ? calcSummary(quiz.id, questions) : null;
+        const $card = $(buildCard(quiz, summary));
+
+        if (!questions) {
+          $card.find('.btn-start').prop('disabled', true).text('準備中');
+        } else {
+          $card.find('.btn-start').on('click', function () {
+            location.href = 'quiz.html?set=' + encodeURIComponent(quiz.id);
+          });
+        }
+
+        const hasIncorrect = summary && summary.incorrect > 0;
+        const hasAnswered = summary && (summary.correct + summary.incorrect) > 0;
+
+        $card.find('.btn-review')
+          .prop('disabled', !hasIncorrect)
+          .on('click', function () {
+            location.href = 'quiz.html?set=' + encodeURIComponent(quiz.id) + '&mode=review';
+          });
+
+        $card.find('.btn-reset')
+          .prop('disabled', !hasAnswered)
+          .on('click', function () {
+            if (confirm('「' + quiz.title + '」の進捗をリセットしますか？\nこの操作は元に戻せません。')) {
+              resetProgress(quiz.id);
+              loadCard(quiz);
+            }
+          });
+
+        $list.append($card);
+      }
+
+      QUIZ_LIST.forEach(function (quiz) {
+        loadCard(quiz);
+      });
+
+      function buildCard(quiz, summary) {
+        let progressHtml = '';
+        if (summary === null) {
+          progressHtml = '<span class="text-muted small">データなし</span>';
+        } else if (summary.correct === 0 && summary.incorrect === 0) {
+          progressHtml = '<span class="text-muted small">未回答 ' + summary.total + '問</span>';
+        } else {
+          progressHtml =
+            '<span class="badge bg-success me-1">✅ ' + summary.correct + '問</span>' +
+            '<span class="badge bg-danger me-1">❌ ' + summary.incorrect + '問</span>' +
+            '<span class="badge bg-secondary">─ ' + summary.unanswered + '問未回答</span>';
+        }
+
+        const titleHtml = $('<span>').text(quiz.title).html();
+        const rangeHtml = quiz.range ? $('<span>').text(quiz.range).html() : '';
+
+        return '<div class="card shadow-sm mb-3 quiz-card" data-quiz-id="' + $('<span>').text(quiz.id).html() + '">' +
+          '<div class="card-body">' +
+            '<div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">' +
+              '<div>' +
+                '<div class="fw-bold fs-5">' + titleHtml + '</div>' +
+                (rangeHtml ? '<div class="text-muted small">' + rangeHtml + '</div>' : '') +
+              '</div>' +
+            '</div>' +
+            '<div class="progress-summary mb-3">' + progressHtml + '</div>' +
+            '<div class="d-flex gap-2 flex-wrap">' +
+              '<button class="btn btn-primary btn-start">スタート</button>' +
+              '<button class="btn btn-outline-warning btn-review">復習</button>' +
+              '<button class="btn btn-outline-danger btn-reset">リセット</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }
+    });
+  </script>
+</body>
+</html>
