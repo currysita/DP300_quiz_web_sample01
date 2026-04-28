@@ -371,6 +371,45 @@
           }
         });
       }
+
+      // ── キーボードショートカット ────────────────────
+      function triggerChoice(label) {
+        const $btn = $('#choices .choice-btn').filter(function () {
+          return $(this).data('label') === label;
+        });
+        if ($btn.length && !$btn.prop('disabled')) {
+          $btn.trigger('click');
+        }
+      }
+
+      $(document).on('keydown', function (e) {
+        if (questions.length === 0) return;
+
+        switch (e.key) {
+          case 'ArrowRight': case 'l': case 'L': case 'n': case 'N':
+            e.preventDefault();
+            if (currentIndex < questions.length - 1) {
+              showQuestion(currentIndex + 1);
+            } else {
+              $('#btn-next').trigger('click');
+            }
+            break;
+          case 'ArrowLeft': case 'h': case 'H': case 'p': case 'P':
+            e.preventDefault();
+            if (currentIndex > 0) showQuestion(currentIndex - 1);
+            break;
+          case 'a': case 'A': triggerChoice('A'); break;
+          case 'b': case 'B': triggerChoice('B'); break;
+          case 'c': case 'C': triggerChoice('C'); break;
+          case 'd': case 'D': triggerChoice('D'); break;
+          case 'e': case 'E': triggerChoice('E'); break;
+          case 'f': case 'F': triggerChoice('F'); break;
+          case 'Enter': case ' ':
+            e.preventDefault();
+            $('#btn-grade:not(:disabled)').trigger('click');
+            break;
+        }
+      });
     });
   </script>
 </body>
