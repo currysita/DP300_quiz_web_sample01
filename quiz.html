@@ -28,10 +28,14 @@
     <div class="card shadow-sm mb-3">
       <div class="card-body">
 
-        <!-- 問題番号・選択形式 -->
-        <div class="d-flex align-items-center gap-2 mb-3">
-          <span id="question-index" class="badge bg-secondary"></span>
-          <span id="question-type-badge" class="badge bg-primary"></span>
+        <!-- 問題番号・選択形式・上部ナビ -->
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <button id="btn-prev-top" class="btn btn-sm btn-outline-secondary" disabled>←</button>
+          <div class="d-flex align-items-center gap-2">
+            <span id="question-index" class="badge bg-secondary"></span>
+            <span id="question-type-badge" class="badge bg-primary"></span>
+          </div>
+          <button id="btn-next-top" class="btn btn-sm btn-outline-secondary" disabled>→</button>
         </div>
 
         <!-- 問題文 -->
@@ -175,7 +179,8 @@
         // 結果・解説をリセット
         $('#result-message').addClass('d-none').removeClass('alert-success alert-danger').text('');
         $('#explanation-card').addClass('d-none');
-        $('#btn-prev').prop('disabled', index === 0);
+        $('#btn-prev, #btn-prev-top').prop('disabled', index === 0);
+        $('#btn-next-top').prop('disabled', index === questions.length - 1);
         $('#btn-next').prop('disabled', true).text(
           index === questions.length - 1 ? '結果を見る' : '次の問題 →'
         );
@@ -314,8 +319,12 @@
       });
 
       // ── ナビゲーションボタン ────────────────────────
-      $('#btn-prev').on('click', function () {
+      $('#btn-prev, #btn-prev-top').on('click', function () {
         if (currentIndex > 0) showQuestion(currentIndex - 1);
+      });
+
+      $('#btn-next-top').on('click', function () {
+        if (currentIndex < questions.length - 1) showQuestion(currentIndex + 1);
       });
 
       $('#btn-next').on('click', function () {
