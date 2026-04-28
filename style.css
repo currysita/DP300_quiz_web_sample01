@@ -1,0 +1,80 @@
+/* ── レイアウト ── */
+body {
+  background-color: #f0f2f5;
+}
+
+.page-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* ── 問題集選択画面 ── */
+.quiz-card {
+  transition: box-shadow 0.15s;
+}
+.quiz-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
+.progress-summary .badge {
+  font-size: 0.8rem;
+}
+
+/* ── 問題画面 ── */
+.choice-btn {
+  text-align: left;
+  white-space: normal;
+  line-height: 1.5;
+}
+
+.question-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+/* 問題番号ナビ */
+.question-nav-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.q-nav-btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  font-size: 0.75rem;
+  border-radius: 6px;
+}
+
+.q-nav-btn.current {
+  outline: 2px solid #0d6efd;
+  outline-offset: 2px;
+}
+
+/* 解説テーブル */
+.explanation-table th,
+.explanation-table td {
+  vertical-align: middle;
+}
+
+/* 廃止バッジ */
+.deprecated-badge {
+  font-size: 0.8rem;
+}
+
+/* ── 結果画面 ── */
+.score-display {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.result-row.correct td:first-child::before {
+  content: '✅ ';
+}
+
+.result-row.incorrect td:first-child::before {
+  content: '❌ ';
+}
