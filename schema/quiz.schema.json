@@ -1,0 +1,195 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "quiz.schema.json",
+  "title": "問題集",
+  "description": "ブラウザで動く問題集アプリの問題集データフォーマット。資格試験・教科問わず汎用的に使用できる。",
+  "type": "object",
+  "required": ["id", "title", "questions"],
+  "additionalProperties": false,
+  "properties": {
+
+    "id": {
+      "type": "string",
+      "description": "問題集の識別子。ファイル名と一致させる（URLパラメータで使用）",
+      "examples": ["q001-050", "aws-saa-001", "math-calculus-01"]
+    },
+
+    "title": {
+      "type": "string",
+      "description": "問題集名（選択画面に表示）",
+      "examples": ["DP-300 問題集 第1回", "AWS SAA 模擬試験", "高校数学 微積分"]
+    },
+
+    "description": {
+      "type": "string",
+      "description": "問題集の説明・補足（選択画面に表示。省略可）"
+    },
+
+    "range": {
+      "type": "string",
+      "description": "出題範囲の説明（省略可）",
+      "examples": ["問題 1〜50", "Chapter 1-3"]
+    },
+
+    "lang": {
+      "type": "string",
+      "description": "問題集の言語（省略時は ja 扱い）",
+      "default": "ja",
+      "examples": ["ja", "en"]
+    },
+
+    "questions": {
+      "type": "array",
+      "description": "問題の配列",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "question", "type", "choices", "answer", "explanation"],
+        "additionalProperties": false,
+        "properties": {
+
+          "id": {
+            "type": "integer",
+            "description": "問題番号。問題集内でユニークであること。欠番があってもよい",
+            "minimum": 1,
+            "examples": [1, 2, 17, 18]
+          },
+
+          "question": {
+            "type": "string",
+            "description": "問題文。Markdown記法を含んでよい（コードブロック・リスト・太字など）",
+            "minLength": 1
+          },
+
+          "type": {
+            "type": "string",
+            "description": "解答形式。single=1択、multiple=複数択",
+            "enum": ["single", "multiple"]
+          },
+
+          "answer_count": {
+            "type": "integer",
+            "description": "type が multiple のとき、正解の個数。UIで「○つ選択」と表示する",
+            "minimum": 2
+          },
+
+          "choices": {
+            "type": "array",
+            "description": "選択肢の配列（2〜6個）",
+            "minItems": 2,
+            "maxItems": 6,
+            "items": {
+              "type": "object",
+              "required": ["label", "text"],
+              "additionalProperties": false,
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "選択肢記号",
+                  "examples": ["A", "B", "C", "D", "E"]
+                },
+                "text": {
+                  "type": "string",
+                  "description": "選択肢テキスト。Markdown記法を含んでよい",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+
+          "answer": {
+            "description": "正解の選択肢ラベル。single の場合は文字列、multiple の場合は文字列の配列",
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "single 用。正解の選択肢ラベル1つ",
+                "examples": ["A", "B", "C"]
+              },
+              {
+                "type": "array",
+                "description": "multiple 用。正解の選択肢ラベルの配列",
+                "minItems": 2,
+                "items": { "type": "string" },
+                "examples": [["A", "C"], ["B", "D"]]
+              }
+            ]
+          },
+
+          "explanation": {
+            "type": "string",
+            "description": "解説テキスト。Markdown記法を含んでよい（コードブロック・テーブル・リストなど）",
+            "minLength": 1
+          },
+
+          "explanation_table": {
+            "type": "array",
+            "description": "各選択肢の解説行（省略可）。UIでテーブル表示する",
+            "items": {
+              "type": "object",
+              "required": ["label", "text", "correct"],
+              "additionalProperties": false,
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "description": "選択肢記号"
+                },
+                "text": {
+                  "type": "string",
+                  "description": "選択肢の解説文",
+                  "minLength": 1
+                },
+                "correct": {
+                  "type": "boolean",
+                  "description": "正解かどうか"
+                }
+              }
+            }
+          },
+
+          "tags": {
+            "type": "array",
+            "description": "問題のカテゴリ・タグ（省略可。将来の絞り込み機能向け）",
+            "items": { "type": "string" },
+            "examples": [["監視", "Always On"], ["セキュリティ", "暗号化"]]
+          },
+
+          "deprecated": {
+            "type": "boolean",
+            "description": "廃止・出題注意フラグ。true の場合、問題文上部に警告バッジを表示する（省略時は false 扱い）",
+            "default": false
+          },
+
+          "deprecation_note": {
+            "type": "string",
+            "description": "廃止理由・代替情報（deprecated が true の場合に記載）"
+          },
+
+          "skip": {
+            "type": "boolean",
+            "description": "出題スキップフラグ。true の場合、問題一覧から除外して出題しない（省略時は false 扱い）",
+            "default": false
+          },
+
+          "skip_note": {
+            "type": "string",
+            "description": "スキップ理由（skip が true の場合に記載）"
+          },
+
+          "note": {
+            "type": "string",
+            "description": "問題固有の補足・注意事項（廃止以外の理由で注記したい場合。省略可）"
+          }
+
+        },
+
+        "if": {
+          "properties": { "type": { "const": "multiple" } },
+          "required": ["type"]
+        },
+        "then": {
+          "required": ["answer_count"]
+        }
+      }
+    }
+  }
+}
