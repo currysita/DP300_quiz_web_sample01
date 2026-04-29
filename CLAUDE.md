@@ -13,6 +13,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | 調査 | 5 |
 | 実装 | 3 |
 
+### README.md への追記提案
+
+ユーザー向けの操作説明や作業手順を追加・変更した場合は、`README.md` への追記を提案する。
+
 ---
 
 ## プロジェクト概要

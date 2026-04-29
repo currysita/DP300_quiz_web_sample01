@@ -78,6 +78,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="app.js"></script>
   <script>
     $(function () {
@@ -241,7 +242,7 @@
           '<span class="fw-bold">正解：</span> <span class="badge bg-success fs-6">' +
           $('<span>').text(answerLabel).html() + '</span>'
         );
-        $('#explanation-text').text(q.explanation);
+        $('#explanation-text').html(marked.parse(q.explanation));
 
         if (q.explanation_table && q.explanation_table.length > 0) {
           let rows = '';
