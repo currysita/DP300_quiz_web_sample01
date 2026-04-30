@@ -3,7 +3,6 @@
   "id": "q001-050",
   "title": "DP-300 問題集 第1回",
   "range": "問題 1〜50（問題16欠番）",
-  "lang": "ja",
   "questions": [
     {
       "id": 1,
@@ -16,17 +15,9 @@
         { "label": "D", "text": "Azure SQL Analytics" }
       ],
       "answer": "B",
-      "explanation": "出題当時の正解は B（SQL Insights）。SQL Insights は Azure VM 上の SQL Server・Always On AG の監視に対応していた。\n\n⚠️ 最新情報（2024年12月31日廃止）:\n・SQL Insights は廃止済み。Microsoft Learn 公式ドキュメントに「SQL Insights has been retired」と明記\n・Azure SQL DB/MI の代替: database watcher（低レイテンシ、エステートレベル監視）\n・SQL Server on Azure VM の代替: VM Insights + Data Collection Rules (DCRs)",
-      "explanation_table": [
-        { "label": "A", "text": "SQL Insights の別名。正解と同義だが、選択肢の文脈では B が正解", "correct": false },
-        { "label": "B", "text": "Azure VM 上の SQL Server・AG を監視できた（廃止済み）", "correct": true },
-        { "label": "C", "text": "Azure SQL DB / SQL MI 専用。IaaS の SQL Server には送信不可", "correct": false },
-        { "label": "D", "text": "PaaS の SQL 監視（DB/MI）向け。IaaS には最適でない", "correct": false }
-      ],
+      "explanation": "**解答:** B（※出題当時の正解。SQL Insights は 2024年12月31日に廃止済み）\n\n~~SQL Insights（Azure Monitor for SQL）は、Azure SQL Database、Azure SQL Managed Instance、Azure VM 上の SQL Server のパフォーマンスを監視するためのサービス。Always On AG の監視に対応している。~~\n\n**⚠️ 最新情報（2024年12月31日廃止）:**\n- SQL Insights は廃止済み。Microsoft Learn 公式ドキュメントに「SQL Insights has been retired」と明記\n- Azure SQL DB/MI の代替: **database watcher**（低レイテンシ、エステートレベル監視）\n- SQL Server on Azure VM の代替: **VM Insights + Data Collection Rules (DCRs)**\n\n| 選択肢 | 説明 | 正否（廃止前） |\n|---|---|---|\n| A. Azure Monitor for SQL | SQL Insights の別名。正解と同義だが、選択肢の文脈では B が正解 | — |\n| B. SQL Insights | Azure VM 上の SQL Server・AG を監視できた（廃止済み） | ✅ 正解（当時） |\n| C. Intelligent Insights | Azure SQL DB / SQL MI 専用。IaaS の SQL Server には送信不可 | ❌ |\n| D. Azure SQL Analytics | PaaS の SQL 監視（DB/MI）向け。IaaS には最適でない | ❌ |",
       "deprecated": true,
-      "deprecation_note": "SQL Insights は 2024年12月31日に廃止済み。現在の試験では出題されない可能性が高い。代替は database watcher または VM Insights + DCR。",
-      "skip": true,
-      "skip_note": "SQL Insights 廃止済みのため出題対象外。"
+      "deprecation_note": "SQL Insights は 2024年12月31日に廃止済み。現在の試験では出題されない可能性が高い。代替は database watcher（Azure SQL DB/MI 向け）または VM Insights + DCR（SQL Server on VM 向け）。"
     },
     {
       "id": 2,
@@ -39,14 +30,7 @@
         { "label": "D", "text": "SQL Assessment" }
       ],
       "answer": "A",
-      "explanation": "Azure Monitor は Azure VM 上の SQL Server に対して、データベースのサイズ・ストレージ使用量・パフォーマンスメトリクスの監視が可能。",
-      "explanation_table": [
-        { "label": "A", "text": "DB サイズ・ストレージ・パフォーマンスメトリクスを監視可能", "correct": true },
-        { "label": "B", "text": "SQL Server 管理ツール。Azure 環境統合監視には不向き", "correct": false },
-        { "label": "C", "text": "PaaS の SQL 監視（DB/MI）向け。IaaS には最適でない", "correct": false },
-        { "label": "D", "text": "構成評価とベストプラクティス確認が目的。サイズ監視ではない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure Monitor は Azure VM 上の SQL Server に対して、データベースのサイズ・ストレージ使用量・パフォーマンスメトリクスの監視が可能。\n\n| 選択肢 | 説明 | 正否 |\n|---|---|---|\n| A. Azure Monitor | DB サイズ・ストレージ・パフォーマンスメトリクスを監視可能 | ✅ 正解 |\n| B. SSMS | SQL Server 管理ツール。Azure 環境統合監視には不向き | ❌ |\n| C. Azure SQL Analytics | PaaS の SQL 監視（DB/MI）向け。IaaS には最適でない | ❌ |\n| D. SQL Assessment | 構成評価とベストプラクティス確認が目的。サイズ監視ではない | ❌ |"
     },
     {
       "id": 3,
@@ -59,18 +43,11 @@
         { "label": "D", "text": "Failover Cluster Manager のウィザード" }
       ],
       "answer": "B",
-      "explanation": "PowerShell は WSFC の作成・ノード追加・Azure 固有設定（Cloud Witness、ロードバランサー連携など）をすべてコマンドで実行できる。SQL Server 2016 以降さらに強化され、New-Cluster・Add-ClusterNode などのコマンドレットが利用可能。",
-      "explanation_table": [
-        { "label": "A", "text": "Azure リソースの作成・管理が目的。VM 内の WSFC 構成には使えない", "correct": false },
-        { "label": "B", "text": "WSFC 作成・構成・Azure 固有設定すべてに対応", "correct": true },
-        { "label": "C", "text": "Azure リソースの管理が目的。VM 内の WSFC 構成には使えない", "correct": false },
-        { "label": "D", "text": "GUI 操作。オンプレ向けで Azure VM 内部での操作には向かない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "PowerShell は WSFC の作成・ノード追加・Azure 固有設定（Cloud Witness、ロードバランサー連携など）をすべてコマンドで実行できる。SQL Server 2016 以降さらに強化され、`New-Cluster`・`Add-ClusterNode` などのコマンドレットが利用可能。\n\n| 選択肢 | 説明 | 正否 |\n|---|---|---|\n| A. Azure Portal | Azure リソースの作成・管理が目的。VM 内の WSFC 構成には使えない | ❌ |\n| B. PowerShell | WSFC 作成・構成・Azure 固有設定すべてに対応 | ✅ 正解 |\n| C. Azure CLI | Azure リソースの管理が目的。VM 内の WSFC 構成には使えない | ❌ |\n| D. Failover Cluster Manager のウィザード | GUI 操作。オンプレ向けで Azure VM 内部での操作には向かない | ❌ |"
     },
     {
       "id": 4,
-      "question": "Azure SQL データベース内のテーブルに対して Always Encrypted を設定されています。テーブルには以下の列があります：\n・Column1: nvarchar(50)\n・Column2: datetime\n・Column3: geography\n・Column4: varchar(max)\n・Column5: decimal(10,2)\n\nAlways Encrypted で暗号化をサポートする列はどれですか？（二つ選択）",
+      "question": "Azure SQL データベース内のテーブルに対して Always Encrypted を住居として設定されています。テーブルには以下の列があります：\n\n- Column1: nvarchar(50)\n- Column2: datetime\n- Column3: geography\n- Column4: varchar(max)\n- Column5: decimal(10,2)\n\nAlways Encrypted で暗号化をサポートする列はどれですか？（二つ選択）",
       "type": "multiple",
       "answer_count": 2,
       "choices": [
@@ -80,18 +57,11 @@
         { "label": "D", "text": "Column5: decimal(10,2)" }
       ],
       "answer": ["A", "C"],
-      "explanation": "Always Encrypted は、クライアント側で暗号化・復号を行う Azure SQL Database の機能。\n\n⚠️ 補足（2026-04-21）: decimal および numeric は Always Encrypted でサポートされている（暗号文長 81 バイト）。geography / geometry が非サポート。問題の解答 A・C は正しい。",
-      "explanation_table": [
-        { "label": "A", "text": "nvarchar はサポート対象", "correct": true },
-        { "label": "B", "text": "geography は非サポート", "correct": false },
-        { "label": "C", "text": "varchar(max) はサポート対象", "correct": true },
-        { "label": "D", "text": "decimal は実際にはサポート対象だが、問題の「二つ選択」では A・C が正解として提示されている", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Always Encrypted は、クライアント側で暗号化・復号を行う Azure SQL Database の機能。\n\n**⚠️ 解説の誤り修正（2026-04-21）:**\n`decimal` および `numeric` は Always Encrypted でサポートされている（暗号文長 81 バイト）。`geography` / `geometry` が非サポート。問題の解答 A・C は正しいが、解説の「decimal 非サポート」は誤り。\n\n| データ型 | サポート | 備考 |\n|---|---|---|\n| char, varchar, nchar, nvarchar | ✅ | Column1（nvarchar）・Column4（varchar(max)）が該当 |\n| datetime, datetime2 など | ✅ | Column2（datetime）も該当 |\n| geography, geometry | ❌ | 非サポート（N/A） |\n| decimal, numeric | ✅ | サポートされる（暗号文長 81 バイト）。Column5 も暗号化できるが選択肢として提示されていないため不正解ではない |\n\n| 選択肢 | 説明 | 正否 |\n|---|---|---|\n| A. Column1: nvarchar(50) | nvarchar はサポート対象 | ✅ 正解 |\n| B. Column3: geography | geography は非サポート | ❌ |\n| C. Column4: varchar(max) | varchar(max) はサポート対象 | ✅ 正解 |\n| D. Column5: decimal(10,2) | decimal は実際にはサポート対象。ただし問題文は「二つ選択」であり、A・C が最も一般的な正解として提示されている | ❌（試験想定の正解外） |"
     },
     {
       "id": 5,
-      "question": "Azure SQL Managed Instance のデータベースがあります。現在インスタンス上のすべてのセッションの待機統計を分析し、最も待機数の多いクエリを特定するための診断管理ビューはどれですか？（一つ選択）",
+      "question": "Azure SQL Managed Instance のデータベースがあります。現在インスタンス上のすべてのセッションの待機統計を分析し、最も待機数の多いクエリを特定するための診断管理ビューをクエリすべきですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "sys.dm_exec_sessions_wait_stats" },
@@ -100,14 +70,7 @@
         { "label": "D", "text": "sys.dm_db_wait_stats" }
       ],
       "answer": "A",
-      "explanation": "sys.dm_exec_sessions_wait_stats は Azure SQL Managed Instance において、セッションごとの待機統計を提供する最適な DMV。",
-      "explanation_table": [
-        { "label": "A", "text": "セッションごとの待機統計。各セッションの待機タイプ・待機時間を返す", "correct": true },
-        { "label": "B", "text": "現在待機中のタスクを返す。リアルタイムの瞬間的な待機状況であり、履歴の分析には不向き", "correct": false },
-        { "label": "C", "text": "クエリ実行中のアクティビティプロファイルを返す。待機統計が主目的ではない", "correct": false },
-        { "label": "D", "text": "データベースレベルの待機統計だが、セッションごとの内訳は提供しない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "`sys.dm_exec_sessions_wait_stats` は Azure SQL Managed Instance において、セッションごとの待機統計を提供する最適な DMV。\n\n| DMV | 説明 | 正否 |\n|---|---|---|\n| sys.dm_exec_sessions_wait_stats | セッションごとの待機統計。現在のチェックポイントに蓄積された各セッションの待機タイプ・待機時間を返す | ✅ 正解 |\n| sys.dm_os_waiting_tasks | 現在待機中のタスクを返す。リアルタイムの瞬間的な待機状況であり、履歴の分析には不向き | ❌ |\n| sys.dm_exec_query_profiles | クエリ実行中のアクティビティプロファイルを返す。待機統計が主目的ではない | ❌ |\n| sys.dm_db_wait_stats | データベースレベルの待機統計だが、セッションごとの内訳は提供しない | ❌ |"
     },
     {
       "id": 6,
@@ -120,18 +83,11 @@
         { "label": "D", "text": "フェールオーバーグループの自動フェールオーバーポリシーを無効にする" }
       ],
       "answer": "A",
-      "explanation": "フェールオーバーグループのリスナーエンドポイント（読み取り/書き込みリスナー）を使用すると、フェールオーバー発生時にプライマリが自動的に切り替わっても、アプリケーションは同じ接続文字列でアクセスし続けることができる。",
-      "explanation_table": [
-        { "label": "A", "text": "フェールオーバー後もアプリ側の変更不要。DNS で自動的に新プライマリへ解決される", "correct": true },
-        { "label": "B", "text": "フェールオーバーのたびに手動変更が必要。自動化されない", "correct": false },
-        { "label": "C", "text": "接続先の切り替えとは無関係", "correct": false },
-        { "label": "D", "text": "フェールオーバー自体を無効化してしまい、目的に反する", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "フェールオーバーグループのリスナーエンドポイント（読み取り/書き込みリスナー）を使用すると、フェールオーバー発生時にプライマリが自動的に切り替わっても、アプリケーションは同じ接続文字列でアクセスし続けることができる。\n\n| 選択肢 | 説明 | 正否 |\n|---|---|---|\n| A. リスナーエンドポイントを使用 | フェールオーバー後もアプリ側の変更不要。DNS で自動的に新プライマリへ解決される | ✅ 正解 |\n| B. 手動で接続先切り替え | フェールオーバーのたびに手動変更が必要。自動化されない | ❌ |\n| C. ファイアウォールルール変更 | 接続先の切り替えとは無関係 | ❌ |\n| D. 自動フェールオーバー無効化 | フェールオーバー自体を無効化してしまい、目的に反する | ❌ |"
     },
     {
       "id": 7,
-      "question": "Azure Synapse Analytics でエンタープライズデータウェアハウスに Customers というテーブルがあります。クレジットカード情報を含む Customers テーブルへの特定ユーザーからのアクセスを制限するソリューションを実装するために何が必要ですか？（一つ選択）",
+      "question": "Azure Synapse Analytics でエンタープライズデータウェアハウスに Customers というテーブルがあります。このデータウェアハウスには、クレジットカード情報を含む Customers テーブルへの特定ユーザーからのアクセスを制限するリソーションを提供する必要があります。このソリューションを実装するために何が必要ですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "データマスキング" },
@@ -140,14 +96,7 @@
         { "label": "D", "text": "Always Encrypted" }
       ],
       "answer": "A",
-      "explanation": "データマスキングは、特定のユーザーが機密データ（クレジットカード番号など）にアクセスする際に、データを完全に制限せず、マスク（隠す）した形で見せる機能。これにより「すべての列へのアクセスを制限」せず閲覧できるようにしながら保護できる。",
-      "explanation_table": [
-        { "label": "A", "text": "特定列へのアクセスをマスクして制限。管理者は制限不可", "correct": true },
-        { "label": "B", "text": "行単位でアクセスを制限する機能。列の制限が目的ではない", "correct": false },
-        { "label": "C", "text": "特定列へのアクセスを完全に制限する機能。マスクではなくアクセス拒否", "correct": false },
-        { "label": "D", "text": "データを暗号化して保存する機能。アクセス制限とは目的が異なる", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "データマスキングは、特定のユーザーが機密データ（クレジットカード番号など）にアクセスする際に、データを完全に制限せず、マスク（隠す）した形で見せる機能。これにより「すべての列へのアクセスを制限」せず閲覧できるようにしながら保護できる。\n\n| 機能 | 特定列へのアクセス制限 | DBA が閲覧可 | 管理者のアクセスを制限 |\n|---|---|---|---|\n| データマスキング | はい（マスク） | はい（ランダム値で表示） | いいえ（管理者は制限不可） |\n| 行レベルセキュリティ | 行単位でアクセスを制限 | はい（特定行を除く） | はい |\n| 列レベルセキュリティ | 特定列へのアクセスを制限 | はい（列全体へのアクセス制限） | はい |\n| Always Encrypted | データを暗号化して保存 | はい（復号化権限があれば） | 部分的（復号化権限がなければ保護） |"
     },
     {
       "id": 8,
@@ -160,34 +109,20 @@
         { "label": "D", "text": "ソースデータのバックアップを作成するため" }
       ],
       "answer": "A",
-      "explanation": "セルフホステッド統合ランタイム（Self-hosted Integration Runtime）は、Azure Data Factory や Azure Synapse Analytics などのサービスでオンプレミスやプライベートネットワーク内のデータソースにアクセスするためのツール。認証情報を入力することで、ソースデータソースへの接続を確立し、データをターゲットに移行できる。",
-      "explanation_table": [
-        { "label": "A", "text": "認証情報の主目的はソースへの接続確立とデータ転送", "correct": true },
-        { "label": "B", "text": "削除は認証情報入力の目的ではない", "correct": false },
-        { "label": "C", "text": "自動化はスケジュール等の別機能が担う", "correct": false },
-        { "label": "D", "text": "バックアップは別の機能・サービスが担う", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "セルフホステッド統合ランタイム（Self-hosted Integration Runtime）は、Azure Data Factory や Azure Synapse Analytics などのサービスでオンプレミスやプライベートネットワーク内のデータソースにアクセスするための一種のツール。認証情報を入力することで、ソースデータソースへの接続を確立し、データをターゲットに移行できる。\n\n| 選択肢 | 説明 | 正否 |\n|---|---|---|\n| A. ソースに接続してデータを移行 | 認証情報の主目的はソースへの接続確立とデータ転送 | ✅ 正解 |\n| B. ソースデータを削除 | 削除は認証情報入力の目的ではない | ❌ |\n| C. データ転送プロセスを自動化 | 自動化はスケジュール等の別機能が担う | ❌ |\n| D. バックアップを作成 | バックアップは別の機能・サービスが担う | ❌ |"
     },
     {
       "id": 9,
-      "question": "Azure Data Lake Storage アカウントにステージングゾーンがあります。ステージングゾーンから最終的なデータを変更なしに Azure Synapse Analytics のデータウェアハウスに入力するために、Azure Databricks ジョブを実行して R ノートブックを実行し、データをデータウェアハウスに入力する解決策は目標を達成できますか？（一つ選択）",
+      "question": "Azure Data Lake Storage アカウントにステージングゾーンがあります。ステージングゾーンから最終的なデータを変更なしに Azure Synapse Analytics のデータウェアハウスに入力するために、Azure Databricks ジョブを実行して R ノートブックを実行し、データをデータウェアハウスに入力する Azure Synapse Analytics のどのモジュールを、この解決策の目的を達成するために選ぶべきですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "Azure Databricks は R スクリプトの実行が R をサポートしないため、目標を達成できない" },
         { "label": "B", "text": "はい、Azure Databricks ジョブは R ノートブックを実行でき、Synapse Analytics にデータを入力できる" },
-        { "label": "C", "text": "Azure Data Factory を使用してパイプラインを作成し、ETL プロセスを実行する必要がある" },
+        { "label": "C", "text": "Azure Data Factory を使用してパイプラインを作成し、ETLプロセスを実行する必要がある" },
         { "label": "D", "text": "Azure Databricks ジョブは Synapse Analytics に直接接続できない" }
       ],
       "answer": "B",
-      "explanation": "Azure Databricks は R、Python、Scala、SQL などの複数の言語をサポートしており、R ノートブックを実行することができる。Azure Databricks ジョブを使用して、JDBC/ODBC 接続を使用して Azure Synapse Analytics に直接データを入力することができる。",
-      "explanation_table": [
-        { "label": "A", "text": "Azure Databricks は R をサポートする", "correct": false },
-        { "label": "B", "text": "正しい。JDBC 等で Synapse に直接入力可能", "correct": true },
-        { "label": "C", "text": "Databricks 単独で実現可能", "correct": false },
-        { "label": "D", "text": "JDBC/ODBC で直接接続可能", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure Databricks は R、Python、Scala、SQL などの複数の言語をサポートしており、R ノートブックを実行することができる。Azure Databricks ジョブを使用して、JDBC/ODBC 接続を使用して Azure Synapse Analytics（旧 SQL Data Warehouse）に直接データを入力することができる。\n\n| 選択肢 | 説明 | 正否 |\n|---|---|---|\n| A. R をサポートしない | Azure Databricks は R をサポートする | ❌ |\n| B. Databricks ジョブで R 実行・Synapse 入力 | 正しい。JDBC 等で Synapse に直接入力可能 | ✅ 正解 |\n| C. Data Factory が必要 | Databricks 単独で実現可能 | ❌ |\n| D. Synapse に直接接続できない | JDBC/ODBC で直接接続可能 | ❌ |"
     },
     {
       "id": 10,
@@ -200,18 +135,11 @@
         { "label": "D", "text": "Resource Monitor" }
       ],
       "answer": "A",
-      "explanation": "SQL Server Resource Governor の主なコンポーネント:\n・Resource Pool: CPU やメモリなどのシステムリソースの割り当て制限を直接定義するコンポーネント\n・Workload Group: ユーザーリクエストをグループ化し、リソースプールに割り当てる。リソース制限は直接設定しない\n・Classifier Function: 着信リクエストを適切なワークロードグループに振り分けるユーザー定義関数",
-      "explanation_table": [
-        { "label": "A", "text": "CPU やメモリなどのリソース割り当て制限を定義。直接設定可能", "correct": true },
-        { "label": "B", "text": "リクエストの分類とワークロードグループへの割り当て。リソース制限は不可", "correct": false },
-        { "label": "C", "text": "ユーザーリクエストのグループ化とリソースプールへの割り当て。制限はリソースプールに依存", "correct": false },
-        { "label": "D", "text": "リソース使用状況の監視のみ。制限設定は不可", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "SQL Server Resource Governor は、SQL Server インスタンス上のリソース消費を管理するための機能。主に3つのコンポーネントで構成される。\n\n1. **Resource Pool**: CPU やメモリなどのシステムリソース（CPU使用率・メモリ使用量など）の割り当て制限を定義するコンポーネント\n2. **Workload Group**: ユーザーリクエストをグループ化し、特定のリソースプールに割り当てるコンポーネント\n3. **Classifier Function**: 着信リクエストを適切なワークロードグループに振り分けるためのユーザー定義関数\n\n| コンポーネント | 主な役割 | リソース制限の設定 |\n|---|---|---|\n| Resource Pool | CPU やメモリなどのリソース割り当て制限を定義 | 可能（直接設定） |\n| Workload Group | ユーザーリクエストのグループ化とリソースプールへの割り当て | 不可（リソースプールに関連付け） |\n| Classifier Function | リクエストの分類とワークロードグループへの割り当て | 不可 |\n| Resource Monitor | リソース使用状況の監視（監視のみ） | 不可 |"
     },
     {
       "id": 11,
-      "question": "SQL Server on Azure Virtual Machine があります。SQL Server インスタンスに障害が発生した場合でも、以下の要件を満たす必要があります。\n・システムデータベースを含むすべてのデータベースを保護する\n・SQL Server Agent ジョブを保護する\n・ダウンタイムを最小限に抑える\n・フェールオーバープロセスを自動的に実行する\n\n推奨事項に何を含めるべきですか？（一つ選択）",
+      "question": "SQL Server on Azure Virtual Machine があります。SQL Server インスタンスに障害が発生した場合でも、以下の要件を満たす必要があります。\n\n- システムデータベースを含むすべてのデータベースを保護する\n- SQL Server Agent ジョブを保護する\n- ダウンタイムを最小限に抑える\n- フェールオーバープロセスを自動的に実行する\n\n推奨事項に何を含めるべきですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "トランザクションレプリケーション" },
@@ -220,18 +148,11 @@
         { "label": "D", "text": "データベースミラーリング" }
       ],
       "answer": "B",
-      "explanation": "Always On フェールオーバークラスターインスタンス（FCI）はインスタンスレベルの保護を提供し、システムデータベース・SQL Server Agent ジョブを含むすべてを自動フェールオーバーで保護できる。",
-      "explanation_table": [
-        { "label": "A", "text": "データ配布に適しているが、システム DB・Agent ジョブの保護・自動フェールオーバーに対応しない", "correct": false },
-        { "label": "B", "text": "インスタンスレベルの保護。システム DB・Agent ジョブ保護・自動フェールオーバーすべてに対応", "correct": true },
-        { "label": "C", "text": "システム DB・Agent ジョブ非対応。手動フェールオーバーが必要", "correct": false },
-        { "label": "D", "text": "システム DB をサポートせず、SQL Server 2022 では非推奨", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Always On フェールオーバークラスターインスタンス（FCI）が正解。インスタンスレベルの保護を提供するため、システムデータベース・SQL Server Agent ジョブを含むすべてを保護し、自動フェールオーバーをサポートする。\n\n| ソリューション | システム DB の保護 | SQL Agent ジョブの保護 | 自動フェールオーバー | 備考 |\n|---|---|---|---|---|\n| Always On フェールオーバークラスターインスタンス | はい | はい | はい | インスタンスレベルの保護を提供 |\n| トランザクションレプリケーション | いいえ | いいえ | いいえ | データ配布に適しているが、HA/DR ソリューションとしては不十分 |\n| ログ配布 | いいえ | いいえ | 手動フェールオーバーが必要 | — |\n| データベースミラーリング | いいえ | いいえ | 条件付き | システム DB をサポートせず、SQL Server 2022 では非推奨 |"
     },
     {
       "id": 12,
-      "question": "2 つの 100GB データベースを Azure に移行し、ワークロードに基づいて動的にスケーリングを行いながらダウンタイムを最小限にする必要があります。何を使用すべきですか？（一つ選択）",
+      "question": "2 つの 100GB データベースを Azure に移行し、ワークロードに基づいて動的にスケーリングを行いながらダウンタイムを最小限にする必要があります何を使用すべきですか（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "Azure SQL Database エラスティック プール" },
@@ -240,14 +161,7 @@
         { "label": "D", "text": "Azure Virtual Machines 上の SQL Server" }
       ],
       "answer": "A",
-      "explanation": "複数のデータベースを効率的に管理し、動的スケーリングを行いながらダウンタイムを最小限に抑えるのは、Azure SQL Database エラスティック プールが最適。複数 DB で共有リソースを効率的に利用できる。",
-      "explanation_table": [
-        { "label": "A", "text": "動的スケーリング自動・ダウンタイムなし・複数 DB の共有リソース管理に最適", "correct": true },
-        { "label": "B", "text": "動的スケーリングは可能だが、複数 DB を個別管理するため非効率", "correct": false },
-        { "label": "C", "text": "スケーリングは手動・発生する場合あり。インスタンスレベルでの管理", "correct": false },
-        { "label": "D", "text": "スケーリングは手動・ダウンタイム発生。インフラ管理の負担が大きい", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "複数のデータベースを効率的に管理し、動的スケーリングを行いながらダウンタイムを最小限に抑えるのは、Azure SQL Database エラスティック プールが最適。\n\n| オプション | 動的スケーリング | ダウンタイム | 複数 DB 管理 | 備考 |\n|---|---|---|---|---|\n| Azure SQL Database エラスティック プール | 自動 | なし | 最適 | 複数 DB で共有リソースを効率的に利用 |\n| Azure SQL Database シングルデータベース | 自動 | なし | 個別管理 | 各 DB を個別に管理するため非効率 |\n| Azure SQL Managed Instance | 手動 | 発生する場合あり | 可能 | インスタンスレベルでのスケーリング |\n| VM 上の SQL Server | 手動 | 発生する | 可能 | インフラ管理の負担が大きい |"
     },
     {
       "id": 13,
@@ -260,18 +174,11 @@
         { "label": "D", "text": "Active geo-replication" }
       ],
       "answer": "B",
-      "explanation": "Auto-failover groups は Azure SQL Managed Instance の複数インスタンス間でデータベースをレプリケートし、自動的に地理的フェイルオーバーを行う機能。リージョン全体の障害が発生した場合でもセカンダリリージョンへの自動フェールオーバーが可能。",
-      "explanation_table": [
-        { "label": "A", "text": "オンプレミス SQL Server で使用される機能。SQL Managed Instance には適用されない", "correct": false },
-        { "label": "B", "text": "SQL Database・SQL Managed Instance 両方に対応。地理的フェールオーバーをサポート", "correct": true },
-        { "label": "C", "text": "主に SQL Server の機能。SQL Managed Instance では直接この形式では使用できない", "correct": false },
-        { "label": "D", "text": "Azure SQL Database で使用される機能。SQL Managed Instance では使用できない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "SQL Managed Instance の地理的フェイルオーバーを実装するための正しいオプションは「Auto-failover groups（自動フェールオーバーグループ）」。\n\n| 機能 | 適用対象 | 地理的フェイルオーバー対応 | SQL Managed Instance 対応 |\n|---|---|---|---|\n| Auto-failover groups | SQL Database、SQL Managed Instance | はい | はい |\n| Active geo-replication | SQL Database | はい | いいえ |\n| Always On 可用性グループ | SQL Server | はい | いいえ（直接的には） |\n| Distributed Availability Groups | SQL Server | はい | いいえ |"
     },
     {
       "id": 14,
-      "question": "SQL Server 2019 に、ユーザーが customerpii テーブルをクエリするたびに記録する必要があります。どの 2 つのオプションを有効にすべきですか？（二つ選択）",
+      "question": "SQL Server 2019 に、ユーザーが customerpii テーブルをクエリするたびに記録する必要があります。どの 2 つのオプションを有効にすべきですか（二つ選択）",
       "type": "multiple",
       "answer_count": 2,
       "choices": [
@@ -281,14 +188,7 @@
         { "label": "D", "text": "サーバー監査仕様（Server Audit Specification）" }
       ],
       "answer": ["A", "B"],
-      "explanation": "特定のテーブルへのクエリアクセスを監査するには、SQL Server 監査とデータベース監査仕様の両方を設定する必要がある。\n・SQL Server 監査: 監査イベントの収集基盤。イベントの送信先を定義する最初のステップ\n・データベース監査仕様: 特定のデータベース内のどのアクションを監査するかを定義",
-      "explanation_table": [
-        { "label": "A", "text": "特定のデータベースオブジェクトに対するアクションの監査定義。テーブルレベルの監査に必要", "correct": true },
-        { "label": "B", "text": "監査イベントの収集と出力先の定義。監査の基盤として必要", "correct": true },
-        { "label": "C", "text": "詳細なパフォーマンス監視とトラブルシューティング向け。監査目的には SQL Server 監査が適切", "correct": false },
-        { "label": "D", "text": "サーバーレベルのイベント（ログイン等）を監査。特定テーブルのクエリ監査には不適切", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "特定のテーブル（この場合は CustomerPII）へのクエリアクセスを監査するには、SQL Server 監査とデータベース監査仕様の両方を設定する必要がある。\n\n- **SQL Server 監査（SQL Server Audit）**: 監査プロセスの最初のステップ。イベントの送信先（ファイル、Windows セキュリティログなど）を定義する\n- **データベース監査仕様（Database Audit Specification）**: 特定のデータベース内のどのアクションを監査するかを定義する\n\n| 監査コンポーネント | 目的 | 適用レベル |\n|---|---|---|\n| SQL Server 監査 | 監査イベントの収集と出力先の定義 | サーバー全体 |\n| データベース監査仕様 | 特定のデータベースオブジェクトに対するアクションの監査定義 | データベース |\n| サーバー監査仕様 | サーバーレベルのイベント監査の定義 | サーバー全体 |\n| 拡張イベント | 詳細なパフォーマンス監視とトラブルシューティング | サーバー / データベース |"
     },
     {
       "id": 15,
@@ -301,14 +201,7 @@
         { "label": "D", "text": "非クラスター化ハッシュインデックス" }
       ],
       "answer": "A",
-      "explanation": "データウェアハウスのファクトテーブルには「クラスター化列ストアインデックス」が最適。列指向のストレージ形式・高い圧縮率・I/O 削減により、大量データに対する分析クエリのパフォーマンスが最も優れている。",
-      "explanation_table": [
-        { "label": "A", "text": "データウェアハウス・大規模分析向け。圧縮率非常に高く分析クエリのパフォーマンスが最速", "correct": true },
-        { "label": "B", "text": "OLTP + 分析の混合環境向け。DW ファクトテーブルのプライマリインデックスとしては最適でない", "correct": false },
-        { "label": "C", "text": "OLTP 環境・検索・範囲クエリ向け。大量データの分析処理には効率的でない", "correct": false },
-        { "label": "D", "text": "メモリ最適化テーブルでのみ使用可能。通常テーブルではサポートされていない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "データウェアハウスのファクトテーブルには、通常「クラスター化列ストアインデックス」が最適。\n\n1. ファクトテーブルは大量のデータを含み、主に分析クエリの対象となる\n2. 列ストアインデックスは列指向のストレージ形式を使用し、同じ列のデータを連続して格納する\n3. クラスター化列ストアインデックスは、データを高度に圧縮でき、I/O 操作を大幅に削減する\n\n| インデックスタイプ | 最適なユースケース | データ圧縮 | 分析クエリのパフォーマンス |\n|---|---|---|---|\n| クラスター化列ストア | データウェアハウス、大規模分析 | 非常に高い | 優れている |\n| 非クラスター化列ストア | OLTP+ 分析の混合環境 | 高い | 良好 |\n| クラスター化 B-tree | OLTP、検索、範囲クエリ | 低い | 限定的 |\n| 非クラスター化 B-tree | OLTP、特定列の検索 | 低い | 限定的 |"
     },
     {
       "id": 17,
@@ -321,14 +214,7 @@
         { "label": "D", "text": "sys.data_classification テーブルに保存される" }
       ],
       "answer": "A",
-      "explanation": "SQL Server 2019 では、データ分類情報は sys.sensitivity_classifications カタログビューに保存される。列のラベル、情報タイプ、ランクなどの分類メタデータを含む。GDPR や HIPAA などのコンプライアンス要件を満たすために重要。",
-      "explanation_table": [
-        { "label": "A", "text": "データ分類情報を格納する正しいカタログビュー", "correct": true },
-        { "label": "B", "text": "カスタムメタデータを保存できるが、データ分類の標準的な保存場所ではない", "correct": false },
-        { "label": "C", "text": "すべてのオブジェクトの基本情報を格納するが、データ分類情報は含まない", "correct": false },
-        { "label": "D", "text": "実際には存在しないカタログビュー", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "SQL Server 2019 では、データ分類情報は `sys.sensitivity_classifications` カタログビューに保存される。\n\n| カタログビュー / 保存場所 | 説明 |\n|---|---|\n| sys.sensitivity_classifications | データ分類情報を格納する正しいカタログビュー。列のラベル、情報タイプ、ランクなどの分類メタデータを含む |\n| 拡張プロパティ | SQL Server のオブジェクトに関するカスタムメタデータを保存できるが、データ分類情報の標準的な保存場所ではない |\n| sys.all_objects | データベース内のすべてのオブジェクトに関する基本情報を格納するが、データ分類情報は含まない |\n| sys.data_classification | 実際には存在しないカタログビュー |\n\nデータ分類情報を確認するには、以下のようなクエリを実行できる：\n\n```sql\nSELECT s.name AS schema_name,\n       o.name AS table_name,\n       c.name AS column_name,\n       sc.label,\n       sc.information_type,\n       sc.rank\nFROM sys.sensitivity_classifications sc\nJOIN sys.objects o ON sc.major_id = o.object_id\nJOIN sys.schemas s ON o.schema_id = s.schema_id\nJOIN sys.columns c ON sc.major_id = c.object_id\nAND sc.minor_id = c.column_id;\n```"
     },
     {
       "id": 18,
@@ -341,14 +227,7 @@
         { "label": "D", "text": "時間ベースの保持ポリシー" }
       ],
       "answer": "A",
-      "explanation": "データベースを任意の時点（Point-in-Time）に復元するには、完全復旧モデル（Full Recovery Model）の構成が必要。完全復旧モデルではすべてのトランザクションがログに記録されるため、任意の時点への復元が可能になる。",
-      "explanation_table": [
-        { "label": "A", "text": "すべてのトランザクションをログに記録。任意時点復元が可能", "correct": true },
-        { "label": "B", "text": "ログバックアップは完全復旧モデル設定後の手順。最初に必要なのはモデルの設定", "correct": false },
-        { "label": "C", "text": "差分バックアップ単独では任意時点復元を実現できない", "correct": false },
-        { "label": "D", "text": "保持ポリシーはバックアップの保管期間に関するもの。任意時点復元の前提条件ではない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "データベースを任意の時点（Point-in-Time）に復元するには、完全復旧モデル（Full Recovery Model）の構成が必要。\n\n完全復旧モデルでは、すべてのトランザクションがログに記録されるため、任意の時点への復元が可能になる。\n\n| 復旧モデル | ログ記録 | 任意時点復元 | バックアップ要件 |\n|---|---|---|---|\n| 完全復旧モデル | すべてのトランザクション | 可能 | 完全＋ログバックアップが必要 |\n| 一括ログ復旧モデル | 一括操作のみ最小限 | 制限あり | 完全＋ログバックアップが必要 |\n| 単純復旧モデル | 最小限（操作間のみ） | 不可 | 完全・差分バックアップのみ |"
     },
     {
       "id": 19,
@@ -361,14 +240,7 @@
         { "label": "D", "text": "Point-in-Time Restore" }
       ],
       "answer": "A",
-      "explanation": "Active geo-replication は、Azure SQL Database で別のリージョンにデータベースのレプリカを作成し、非同期でデータを継続的にレプリケートする機能。プライマリに障害が発生した場合、セカンダリに手動フェールオーバーできる。",
-      "explanation_table": [
-        { "label": "A", "text": "別リージョンへのレプリカ作成・非同期レプリケーション対応。フェールオーバーは手動", "correct": true },
-        { "label": "B", "text": "同一リージョン内のレプリカ。非同期リージョン間レプリケーションではない", "correct": false },
-        { "label": "C", "text": "Active geo-replication を内部的に使用し、自動フェールオーバーポリシーを追加したもの", "correct": false },
-        { "label": "D", "text": "過去の特定時点に復元する機能。レプリケーションではない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Active geo-replication は、Azure SQL Database で別のリージョンにデータベースのレプリカを作成し、非同期でデータを継続的にレプリケートする機能。\n\n| 機能 | 別リージョンレプリカ | 非同期レプリケーション | 自動フェールオーバー |\n|---|---|---|---|\n| Active geo-replication | はい | はい | いいえ（手動） |\n| Auto-failover group | はい | はい | はい |\n| 読み取り可能なセカンダリ レプリカ | 同一リージョン内 | 同期 | — |\n| Point-in-Time Restore | — | — | — |"
     },
     {
       "id": 20,
@@ -381,38 +253,24 @@
         { "label": "D", "text": "オンデマンドトリガー" }
       ],
       "answer": "B",
-      "explanation": "タンブリングウィンドウトリガーは、LastUpdatedDate などの時間ウィンドウを使用して増分データを処理する場合に最適。自動再試行・バックフィル対応・同時実行制御に対応したパイプライン実行に特化したトリガー。",
-      "explanation_table": [
-        { "label": "A", "text": "定期的な実行に対応するが、自動再試行・バックフィルに非対応", "correct": false },
-        { "label": "B", "text": "定期実行・自動再試行・バックフィル対応。増分データ処理・時間ウィンドウ処理に最適", "correct": true },
-        { "label": "C", "text": "ファイル作成などのイベント駆動処理向け。定期的な ETL には不適切", "correct": false },
-        { "label": "D", "text": "手動実行・他パイプラインからの呼び出し向け。定期実行ではない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "タンブリングウィンドウトリガーは、同時実行制御やスロットリング機能に対応したパイプライン実行に特化したトリガー。LastUpdatedDate などの時間ウィンドウを使用して増分データを処理する場合に最適。\n\n| トリガータイプ | 定期実行 | 自動再試行 | バックフィル | 主な用途 |\n|---|---|---|---|---|\n| スケジュールトリガー | 定期的な実行 | × | × | 定期的なパイプライン実行 |\n| タンブリングウィンドウトリガー | 定期的な実行 | ○ | ○ | 増分データ処理、時間ウィンドウ処理 |\n| イベントトリガー | × | × | × | ファイル作成などのイベント駆動処理 |\n| オンデマンドトリガー | × | × | × | 手動実行、他パイプラインからの呼び出し |"
     },
     {
       "id": 21,
-      "question": "次の Transact-SQL クエリがあります。\n\nSELECT\n    name AS [FileName],\n    size/128.0 AS [FileSizeInMB],\n    CAST(FILEPROPERTY(name, 'SpaceUsed') AS INT)/128.0 AS [UsedSpaceMB],\n    size/128.0 - CAST(FILEPROPERTY(name, 'SpaceUsed') AS INT)/128.0 AS [FreeSpaceMB],\n    size/128.0 * 100 / NULLIF(size, 0) AS [PercentUsed]\nFROM sys.database_files;\n\nこのクエリの目的として最も適切なものはどれですか？（一つ選択）",
+      "question": "次の Transact-SQL クエリがあります。このクエリによって返される各列の意味はどれですか？（一つ選択）\n\n```sql\nSELECT\n    name AS [FileName],\n    size/128.0 AS [FileSizeInMB],\n    CAST(FILEPROPERTY(name, 'SpaceUsed') AS INT)/128.0 AS [UsedSpaceMB],\n    size/128.0 - CAST(FILEPROPERTY(name, 'SpaceUsed') AS INT)/128.0 AS [FreeSpaceMB],\n    size/128.0 * 100 / NULLIF(size, 0) AS [PercentUsed]\nFROM sys.database_files;\n```",
       "type": "single",
       "choices": [
-        { "label": "A", "text": "データベースファイルの合計サイズのみを表示する" },
-        { "label": "B", "text": "データベースファイルの空き容量を管理・確認する" },
-        { "label": "C", "text": "データベースファイルの使用済み容量のみを表示する" },
-        { "label": "D", "text": "データベースファイルの使用率（パーセント）のみを表示する" }
+        { "label": "A", "text": "[TotalSizeMB]" },
+        { "label": "B", "text": "[FreeSpaceMB]" },
+        { "label": "C", "text": "[UsedSpaceMB]" },
+        { "label": "D", "text": "[PercentUsed]" }
       ],
       "answer": "B",
-      "explanation": "このクエリはデータベースファイルの空き容量を管理するもので、各列の意味は以下の通り:\n・[FileName]: ファイル名\n・[FileSizeInMB]: 合計サイズ（MB）\n・[UsedSpaceMB]: 使用済み容量（MB）\n・[FreeSpaceMB]: 空き容量（MB）= 合計 − 使用済み\n・[PercentUsed]: 使用率（%）",
-      "explanation_table": [
-        { "label": "A", "text": "合計サイズだけでなく使用済み・空き・使用率も含む。目的が限定的すぎる", "correct": false },
-        { "label": "B", "text": "ファイル名・合計・使用済み・空き容量・使用率を一覧表示。空き容量管理が主目的", "correct": true },
-        { "label": "C", "text": "使用済みだけでなく空き容量・使用率も含む。目的が限定的すぎる", "correct": false },
-        { "label": "D", "text": "使用率だけでなく複数の情報を提供するクエリ", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "このクエリは、データベースファイルの空き容量を管理するもので、各列の意味は以下の通り：\n\n- [FileName]: データベースファイルの名前\n- [FileSizeInMB]: ファイルの合計サイズ（MB単位）\n- [UsedSpaceMB]: 使用済み容量（MB単位）\n- [FreeSpaceMB]: 空き容量（MB単位）= 合計サイズ − 使用済み容量\n- [PercentUsed]: 使用率（パーセント）\n\n[FreeSpaceMB] は以下で計算される：\n`size/128.0 - CAST(FILEPROPERTY(name, 'SpaceUsed') AS INT)/128.0`"
     },
     {
       "id": 22,
-      "question": "Azure Data Factory V2 のデータファクトリ d1 があります。d1 は Azure Key Vault に保存された暗号化キー key1 を使用して暗号化する必要があります。何を行うべきですか？（一つ選択）",
+      "question": "Azure Data Factory V2 のデータファクトリ d1 があります。d1 は別にランクされたサービスが含む Azure Key Vault に暗号化キー key1 が保存されています。key1 を使用して d1 を暗号化する必要があります。何を行うべきですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "vault のアクセスポリシーを構成する" },
@@ -421,14 +279,7 @@
         { "label": "D", "text": "d1 のカスタム暗号化ランタイムを作成する" }
       ],
       "answer": "A",
-      "explanation": "Azure Data Factory V2 をカスタマー管理キー（CMK）で暗号化するには、Key Vault のアクセスポリシーに Data Factory のマネージド ID に対して適切な権限（Get、Unwrap Key、Wrap Key）を付与する必要がある。",
-      "explanation_table": [
-        { "label": "A", "text": "Data Factory のマネージド ID に Key Vault へのアクセス権を付与。CMK 暗号化の必須手順", "correct": true },
-        { "label": "B", "text": "リンクされたサービスの削除は暗号化とは無関係", "correct": false },
-        { "label": "C", "text": "アクセスポリシーの構成が正しい手順。「使用権限」の付与自体はアクセスポリシー設定で行う", "correct": false },
-        { "label": "D", "text": "カスタム暗号化ランタイムという機能は存在しない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure Data Factory V2 をカスタマー管理キー（CMK）で暗号化するには、vault のアクセスポリシーに Data Factory のマネージド ID に対して適切な権限（Get、Unwrap Key、Wrap Key）を付与する必要がある。\n\n| Azure Data Factory 暗号化の設定手順 | 目的 |\n|---|---|\n| Key Vault のアクセスポリシー設定 | Data Factory に Key Vault へのアクセス権付与 |\n| Data Factory のマネージド ID 確認 | CMK 設定の前提条件 |\n| Data Factory の CMK 設定 | 使用する Key Vault と key1 を指定 |\n| 必要な権限 | Get, Unwrap Key, Wrap Key |"
     },
     {
       "id": 23,
@@ -442,18 +293,11 @@
         { "label": "D", "text": "管理グループ" }
       ],
       "answer": ["A", "B", "C", "D"],
-      "explanation": "Azure Policy は以下のすべてのスコープレベルにデプロイできる:\n・テナント: 組織全体（最上位スコープ）\n・管理グループ: 複数のサブスクリプションをまとめて管理\n・サブスクリプション: 特定のサブスクリプション内のすべてのリソース\n・リソースグループ: 特定のリソースグループ内のリソース\n\n上位レベルで定義されたポリシーは下位レベルに継承される。",
-      "explanation_table": [
-        { "label": "A", "text": "リソースグループ内のリソースに適用可能", "correct": true },
-        { "label": "B", "text": "サブスクリプション内のすべてのリソースに適用可能", "correct": true },
-        { "label": "C", "text": "組織全体（最上位スコープ）に適用可能", "correct": true },
-        { "label": "D", "text": "配下のサブスクリプション・リソースグループに継承して適用可能", "correct": true }
-      ],
-      "deprecated": false
+      "explanation": "Azure Policy は以下のスコープレベルにデプロイできる：\n\n| スコープレベル | 適用範囲 | 継承 |\n|---|---|---|\n| テナント | すべての管理グループ、サブスクリプション、リソースグループ | すべてに継承 |\n| 管理グループ | 配下のサブスクリプション、リソースグループ | 配下に継承 |\n| サブスクリプション | 配下のリソースグループ、リソース | 配下に継承 |\n| リソースグループ | グループ内のリソース | グループ内に継承 |"
     },
     {
       "id": 24,
-      "question": "SQL Server on Azure Virtual Machines のインスタンス SQL1 があります。SQL1 には Microsoft SQL Server イベントをキャプチャする Extended Events セッション session1 があります。session1 のイベントを Event Tracing for Windows（ETW）でキャプチャするために何を追加すべきですか？（一つ選択）",
+      "question": "SQL Server on Azure Virtual Machines のインスタンス SQL1 があります。SQL1 には Microsoft SQL Server イベントをキャプチャする Extended Events セッション session1 があります。session1 のイベントを Event Tracing for Windows（ETW）でキャプチャするためにイベントに関連付ける必要があります。何を追加すべきですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "セッションのイベントフィルター設定を変更する" },
@@ -462,14 +306,7 @@
         { "label": "D", "text": "セッションのデータストレージ設定を変更する" }
       ],
       "answer": "B",
-      "explanation": "Extended Events セッションを ETW に連携するには、セッションに etw_classic_sync_target ターゲットを追加する必要がある。ターゲットはイベントデータを収集する宛先を指定するコンポーネント。",
-      "explanation_table": [
-        { "label": "A", "text": "フィルターはキャプチャするイベントの条件。ETW 統合には直接関係なし", "correct": false },
-        { "label": "B", "text": "ETW 統合には etw_classic_sync_target の追加が必要", "correct": true },
-        { "label": "C", "text": "アクションは収集する追加情報。ETW 統合には直接関係なし", "correct": false },
-        { "label": "D", "text": "データストレージ設定の変更は ETW 統合には直接関係なし", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "SQL Server の Extended Events セッションを ETW（Event Tracing for Windows）に連携するには、Extended Events セッションに ETW 関連のターゲットを追加する必要がある。具体的には `etw_classic_sync_target` を追加する。\n\n| Extended Events コンポーネント | 目的 | ETW 統合との関連 |\n|---|---|---|\n| ターゲット | イベントデータを収集する宛先を指定 | ETW 統合には `etw_classic_sync_target` を追加する必要あり |\n| イベント | 収集する追加情報 | 統合には直接関係なし |\n| フィルター | キャプチャするイベントの条件 | 統合には直接関係なし |\n| データストレージ設定 | イベントデータの保存方法 | 統合には直接関係なし |"
     },
     {
       "id": 25,
@@ -482,14 +319,7 @@
         { "label": "D", "text": "streaming" }
       ],
       "answer": "C",
-      "explanation": "「その間隔中に到着したイベントのみを報告」= 増分データのみの追記 = append モード。\n・append: 新規到着データのみを Delta Lake テーブルに追加する（デフォルトモード）\n・complete: 毎回結果全体を出力。この用途には不適切\n・update: Delta Lake テーブルへの出力でサポートされていない\n・streaming: 出力モードではなく処理方式",
-      "explanation_table": [
-        { "label": "A", "text": "前回トリガーから変更された行のみを出力。Delta Lake はサポートしない", "correct": false },
-        { "label": "B", "text": "集計結果全体を毎回出力。データ量増加でパフォーマンスが低下する可能性あり", "correct": false },
-        { "label": "C", "text": "将来のトリガーで変化しない行のみを出力。Delta Lake への書き込みに対応", "correct": true },
-        { "label": "D", "text": "出力モードではなく処理方式", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "この問題のシナリオでは、5分間隔で新しく到着したイベントのみを報告する（増分データのみ）ため、`append` モードが最適。\n\n| 出力モード | 説明 |\n|---|---|\n| append | 将来のトリガーで変化しない行のみを出力する（デフォルトモード）。Delta Lake テーブルへの書き込みに対応 |\n| complete | 集計結果全体をすべてのトリガーで出力する。データ量増加に伴いパフォーマンスが低下する可能性あり |\n| update | 前回のトリガーから変更された行のみを出力する。Delta Lake はサポートしない |\n| streaming | 出力モードではなく処理方式 |"
     },
     {
       "id": 26,
@@ -504,15 +334,7 @@
         { "label": "E", "text": "インデックスはより多くのメモリを消費します" }
       ],
       "answer": ["A", "B"],
-      "explanation": "アーカイブ圧縮を有効にすると:\n・高い圧縮率により、同じデータがより少ないデータページに格納される → クエリのページ取得数が減少\n・圧縮されたデータは解凍が必要なため、CPU 使用率が増加\n・I/O は減少（選択肢 D は逆）、ディスク容量も減少（選択肢 C も正しいが、問題文は2つ選択）",
-      "explanation_table": [
-        { "label": "A", "text": "解凍処理が必要なため CPU 使用率が増加", "correct": true },
-        { "label": "B", "text": "高圧縮率によりデータページ数が減少し、クエリのページ取得数が減る", "correct": true },
-        { "label": "C", "text": "正しい（ディスク容量は減少する）が、この問題では A・B が正解として選択される", "correct": false },
-        { "label": "D", "text": "圧縮によりディスク I/O は減少する（逆）", "correct": false },
-        { "label": "E", "text": "メモリ消費が増加するわけではない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "列ストアインデックスのアーカイブ圧縮を有効にすると、以下の影響があります：\n\n- **より少ないデータページ**: 高い圧縮率により、クエリ実行時に取得するページ数が減少する（B が正解）\n- **CPU 使用率の増加**: アーカイブ圧縮されたデータは、クエリ実行時に解凍する必要があるため、より多くの CPU 処理が必要になる（A が正解）\n- **I/O は減少**: データが高度に圧縮されているため、ディスクからの読み取り I/O は減少する（D の逆が正しい）\n\n| 特性 | 標準列ストア圧縮 | アーカイブ圧縮 |\n|---|---|---|\n| 圧縮率 | 標準 | より高い |\n| ディスク使用量 | 標準 | より少ない |\n| CPU 使用率 | 標準 | より高い |\n| データページ数 | 標準 | より少ない |\n| 適用シナリオ | 一般的なワークロード | アクセス頻度の低いデータ |"
     },
     {
       "id": 27,
@@ -525,30 +347,18 @@
         { "label": "D", "text": "FOREIGN KEY 制約を持つテーブル" }
       ],
       "answer": "A",
-      "explanation": "代理キー（Surrogate Key）の実装には IDENTITY プロパティが最適。挿入時に自動的に一意の整数値を生成し、テーブル作成時に列に対して定義できる。",
-      "explanation_table": [
-        { "label": "A", "text": "自動増分する一意の整数値を生成。代理キーとして最適", "correct": true },
-        { "label": "B", "text": "データの履歴管理が目的。代理キーの実装とは目的が異なる", "correct": false },
-        { "label": "C", "text": "テーブルに依存しない連番生成。可能だが複雑になる", "correct": false },
-        { "label": "D", "text": "他のテーブルとの参照整合性を確保するもの。代理キーの実装目的とは異なる", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "代理キー（Surrogate Key）とは、システムによって生成される人工的な主キーのこと。代理キーの実装方法としては IDENTITY プロパティが最も適切。\n\n| 選択肢 | 主な用途 | 代理キーとしての適合性 |\n|---|---|---|\n| IDENTITY プロパティ | 自動増分する一意の整数値を生成 | 高（最適） |\n| FOREIGN KEY 制約 | 他のテーブルとの参照整合性を確保 | 低（目的が異なる） |\n| SEQUENCE オブジェクト | テーブルに依存しない連番生成 | 中（可能だが複雑） |\n| 時間的テーブル | データの履歴管理 | 低（目的が異なる） |"
     },
     {
       "id": 28,
-      "question": "SQL Server 2019 を実行している Azure 仮想マシンがあります。sys.dm_exec_requests に対してクエリを実行したところ、wait_type が PAGELATCH_UP で、wait_resource が 2:3:905856 であることがわかりました。システムパフォーマンスを向上させる必要があります。解決策：追加の tempdb ファイルを作成します。この解決策は目標を達成しますか？（一つ選択）",
+      "question": "SQL Server 2019 を実行している Azure 仮想マシンがあります。SQL Server インスタンス内のクエリのパフォーマンス問題をトラブルシューティングしています。詳細情報を収集するために、sys.dm_exec_requests に対してクエリを実行したところ、wait_type が PAGELATCH_UP で、wait_resource が 2:3:905856 であることがわかりました。システムパフォーマンスを向上させる必要があります。解決策：追加の tempdb ファイルを作成します。この解決策は目標を達成しますか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "はい" },
         { "label": "B", "text": "いいえ" }
       ],
       "answer": "A",
-      "explanation": "wait_resource「2:3:905856」の 2 はデータベース ID = tempdb を意味する。PAGELATCH_UP は tempdb の同じページへの競合を示しており、tempdb ファイルを追加することでページの割り当てが分散され、ホットスポット（競合）が減少する。\n\nMicrosoft 推奨: tempdb ファイル数は CPU コア数と同じにする（8コアまで）。すべてのファイルは同じサイズ・同じ自動成長設定にすること。",
-      "explanation_table": [
-        { "label": "A", "text": "tempdb ファイル追加によりページ割り当てが分散し、PAGELATCH_UP の競合が解消される", "correct": true },
-        { "label": "B", "text": "tempdb（DB ID=2）のページ競合には tempdb ファイル追加が有効", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "wait_resource の値「2:3:905856」の意味：\n- 2: データベース ID（この場合は tempdb）\n- 3: ファイル ID\n- 905856: ページ ID\n\nPAGELATCH_UP は、メモリ内のデータページに対する更新ラッチの競合を示している。特に tempdb（データベース ID=2）でこの問題が発生している場合、多くの同時実行セッションが tempdb の同じページに対して競合していることを意味する。\n\ntempdb ファイルを追加することで、SQL Server はそれらのファイル間でページの割り当てを分散し、同じページに対する競合（PAGELATCH）が減少する。\n\n| 待機タイプ | 意味 | 一般的な解決策 |\n|---|---|---|\n| PAGELATCH_UP | メモリ内ページの更新ラッチ競合 | tempdb ファイルの追加、ファイルの均等なサイズ設定 |\n| PAGELATCH_SH | メモリ内ページの共有ラッチ競合 | tempdb ファイルの追加、ファイルの均等なサイズ設定 |\n| PAGEIOLATCH | ディスク I/O 関連のラッチ | ストレージパフォーマンスの向上 |"
     },
     {
       "id": 29,
@@ -561,14 +371,7 @@
         { "label": "D", "text": "Azure SQL Database シングルデータベース" }
       ],
       "answer": "B",
-      "explanation": "CLR ストアドプロシージャでファイル共有にアクセスする SQL Server の移行先は SQL Server on Azure Virtual Machines が最適。リフトアンドシフトで CLR の全機能・ファイルシステムへのアクセスをそのまま維持できる。",
-      "explanation_table": [
-        { "label": "A", "text": "CLR サポートは制限付き。外部リソース（ファイル共有）へのアクセスは不可", "correct": false },
-        { "label": "B", "text": "CLR 完全サポート・外部リソースアクセス可能。リフトアンドシフトで移行が最も容易", "correct": true },
-        { "label": "C", "text": "CLR 非常に制限的。外部リソースアクセス不可", "correct": false },
-        { "label": "D", "text": "CLR 非常に制限的。外部リソースアクセス不可", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "CLR ストアドプロシージャを使用してファイル共有にアクセスする SQL Server インスタンスの移行先は SQL Server on Azure Virtual Machines が最適。\n\n| Azure サービス | CLR サポート | 外部リソースアクセス | 移行の容易さ |\n|---|---|---|---|\n| SQL Server on Azure VMs | 完全サポート | 可能 | 最も容易（リフトアンドシフト） |\n| Azure SQL Managed Instance | 制限付きサポート | 不可 | 中程度（一部変更が必要） |\n| Azure SQL Database | 非常に制限的 | 不可 | 困難（多くの変更が必要） |"
     },
     {
       "id": 30,
@@ -581,14 +384,7 @@
         { "label": "D", "text": "Query Performance Insight を使用してインデックスの推奨事項を確認する" }
       ],
       "answer": "B",
-      "explanation": "Azure SQL Database の自動チューニング機能を有効にすることで、不足しているインデックスを自動的に作成できる。自動チューニングの機能: CREATE INDEX（不足インデックスの自動作成）、DROP INDEX（未使用インデックスの削除）、FORCE LAST GOOD PLAN（クエリプランの回帰検出）。",
-      "explanation_table": [
-        { "label": "A", "text": "Intelligent Insights は診断レポートのみ。インデックスの自動作成機能はない", "correct": false },
-        { "label": "B", "text": "自動チューニングを有効にすることで、不足インデックスを自動的に作成できる", "correct": true },
-        { "label": "C", "text": "不足インデックスの情報提供のみ。自動作成は行わない", "correct": false },
-        { "label": "D", "text": "クエリのパフォーマンス分析のみ。自動インデックス作成は行わない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure SQL Database の自動チューニング機能は、パフォーマンスの問題を検出し、自動的に修正するための機能。インデックスが不足しているテーブルに対して、自動的にインデックスを作成することができる。\n\n自動チューニングには以下の機能がある：\n1. **CREATE INDEX** - 不足しているインデックスを自動的に作成\n2. **DROP INDEX** - 使用されていない冗長なインデックスを削除\n3. **FORCE LAST GOOD PLAN** - クエリ実行プランの回帰を検出し、最適なプランを強制\n\n| 機能 | 目的 | 自動インデックス作成 |\n|---|---|---|\n| 自動チューニング | パフォーマンス問題の自動検出と修正 | はい |\n| Intelligent Insights | パフォーマンス問題の診断・レポート | いいえ（診断のみ） |\n| sys.dm_db_missing_index_details | 不足インデックスの情報提供 | いいえ（情報提供のみ） |\n| Query Performance Insight | クエリのパフォーマンス分析 | いいえ（分析のみ） |"
     },
     {
       "id": 31,
@@ -601,18 +397,11 @@
         { "label": "D", "text": "condition" }
       ],
       "answer": "A",
-      "explanation": "ARM テンプレートでは、dependsOn プロパティを使用してリソース間の依存関係を明示的に宣言する。Azure Resource Manager はこれをもとに依存関係グラフを構築し、リソースを正しい順序でデプロイする。",
-      "explanation_table": [
-        { "label": "A", "text": "リソース間の依存関係を明示的に定義し、デプロイ順序を制御する", "correct": true },
-        { "label": "B", "text": "現在のリソースグループの情報を取得する関数。依存関係の定義には使用されない", "correct": false },
-        { "label": "C", "text": "リソースプロバイダーの API バージョンを指定する。依存関係の定義には使用されない", "correct": false },
-        { "label": "D", "text": "条件付きリソースデプロイを制御する。依存関係の定義には使用されない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "ARM テンプレートでは、リソースのデプロイ順序を制御するために依存関係を明示的に定義する必要がある。`dependsOn` プロパティは、あるリソースが別のリソースに依存していることを宣言するために使用される。\n\n| ARM テンプレート要素 | 主な目的 | 依存関係との関連 |\n|---|---|---|\n| dependsOn | リソース間の依存関係を明示的に定義 | 直接依存関係を宣言し、デプロイ順序を制御 |\n| resourceGroup() | 現在のリソースグループの情報を取得する関数 | 依存関係の定義には使用されない |\n| apiVersion | リソースプロバイダーの API バージョンを指定 | 依存関係の定義には使用されない |\n| condition | 条件付きリソースデプロイを制御 | 依存関係の定義には使用されない |"
     },
     {
       "id": 32,
-      "question": "オンプレミスの Microsoft SQL Server 2019 インスタンスに 10 個のデータベースがホストされています。Azure SQL Database への移行前に、Azure SQL Database との互換性を検証する必要があります。どの 2 つのツールを使用できますか？（二つ選択）",
+      "question": "オンプレミスの Microsoft SQL Server 2019 インスタンスに 10 個のデータベースがホストされています。これらのデータベースを Azure SQL Database に移行する計画があります。Azure SQL Database との互換性を検証する必要があります。どの 2 つのツールを使用できますか？（二つ選択）",
       "type": "multiple",
       "answer_count": 2,
       "choices": [
@@ -623,15 +412,7 @@
         { "label": "E", "text": "SQL Server Management Studio (SSMS) Copy Database Wizard" }
       ],
       "answer": ["A", "D"],
-      "explanation": "互換性検証ツール:\n・DMA: Azure SQL Database への移行に関する互換性の問題を検出するために設計されたツール\n・Azure Migrate Discovery and assessment tool: オンプレミスワークロードを評価し、Azure SQL Database との互換性を検証できる",
-      "explanation_table": [
-        { "label": "A", "text": "スキーマ互換性評価・移行の問題検出に対応。Azure SQL Database 互換性評価に最適", "correct": true },
-        { "label": "B", "text": "インフラストラクチャ評価・移行計画向け。Azure SQL Database 互換性評価は限定的", "correct": false },
-        { "label": "C", "text": "実際の移行プロセス実行ツール。評価ツールではない", "correct": false },
-        { "label": "D", "text": "オンプレミスワークロードの評価と Azure 移行準備状況確認に対応", "correct": true },
-        { "label": "E", "text": "SQL Server インスタンス間のデータベースコピー向け。互換性評価には非対応", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "オンプレミスの SQL Server 2019 から Azure SQL Database への移行前に互換性を検証するためのツールは以下の2つ：\n\n1. **Data Migration Assistant（DMA）**: スキーマ互換性評価、移行の問題検出に特化したツール\n2. **Azure Migrate Discovery and assessment tool**: オンプレミスのワークロードを評価し、Azure 移行の準備状況を確認するためのツール\n\n| ツール名 | 主な用途 | Azure SQL Database 互換性評価 |\n|---|---|---|\n| Data Migration Assistant (DMA) | スキーマ互換性評価、移行の問題検出 | 対応 |\n| Azure Migrate Discovery and assessment tool | オンプレミスワークロードの評価、Azure 移行準備状況確認 | 対応 |\n| Microsoft MAP Toolkit | インフラストラクチャ評価、移行計画 | 限定的 |\n| Azure Database Migration Service | 実際の移行プロセス実行 | 非対応（評価ツールではない） |\n| SSMS Copy Database Wizard | SQL Server インスタンス間のデータベースコピー | 非対応 |"
     },
     {
       "id": 33,
@@ -644,14 +425,7 @@
         { "label": "D", "text": "SQLAgentUserRole" }
       ],
       "answer": "D",
-      "explanation": "最小権限の原則に従って、プロキシアカウントの構成に必要な最小限のロールは SQLAgentUserRole。自分が所有するジョブ・スケジュールの管理と、割り当てられたプロキシを使用したジョブステップの実行が可能。",
-      "explanation_table": [
-        { "label": "A", "text": "SQLAgentUserRole の権限 + すべてのジョブの有効化/無効化。必要以上の権限", "correct": false },
-        { "label": "B", "text": "すべての操作が可能。過剰権限であり最小権限の原則に違反", "correct": false },
-        { "label": "C", "text": "SQLAgentUserRole の権限 + すべてのジョブ・スケジュールの参照。必要以上の権限", "correct": false },
-        { "label": "D", "text": "プロキシを使用したジョブステップ実行が許可された最小権限のロール", "correct": true }
-      ],
-      "deprecated": false
+      "explanation": "最小権限の原則に従って、プロキシアカウントの構成に必要な最小限のロールは SQLAgentUserRole。\n\n| ロール | 権限 | プロキシ構成 |\n|---|---|---|\n| SQLAgentUserRole | 自分が所有するジョブとスケジュールの管理、プロキシを使用したジョブステップの実行 | 可能（割り当てられたプロキシを使用） |\n| SQLAgentReaderRole | SQLAgentUserRole の権限 + すべてのジョブ・スケジュールの参照 | 可能 |\n| SQLAgentOperatorRole | SQLAgentReaderRole の権限 + すべてのジョブの有効化/無効化、すべてのスケジュールの削除 | 可能 |\n| sysadmin | すべての操作 | 可能（過剰権限） |"
     },
     {
       "id": 34,
@@ -664,14 +438,7 @@
         { "label": "D", "text": "Performance Recommendations" }
       ],
       "answer": "A",
-      "explanation": "Azure Database for MySQL の Query Store 機能は、クエリの実行時間・CPU 使用率・I/O 使用率・実行回数・クエリテキストなどを収集し、最もリソースを消費するクエリを特定するのに最適なツール。",
-      "explanation_table": [
-        { "label": "A", "text": "クエリパフォーマンス統計の収集と分析。MySQL での利用可・クエリレベルの詳細分析が可能", "correct": true },
-        { "label": "B", "text": "サーバー全体のメトリクス監視。クエリレベルの分析は限定的", "correct": false },
-        { "label": "C", "text": "Azure SQL Database 向けの機能。MySQL では利用不可", "correct": false },
-        { "label": "D", "text": "パフォーマンス向上の推奨事項提供。クエリレベルの分析はなし", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure Database for MySQL の Query Store 機能は、クエリのパフォーマンスを監視するための最適なツール。クエリの実行時間・CPU 使用率・I/O 使用率・実行回数などの情報を提供する。\n\n| ツール | 主な用途 | MySQL での利用可否 | クエリレベルの分析 |\n|---|---|---|---|\n| Query Store | クエリパフォーマンス統計の収集と分析 | 可能 | 詳細 |\n| Azure Monitor | サーバー全体のメトリクス監視 | 可能 | 限定的 |\n| Query Performance Insight | Azure SQL Database 向けの機能 | 不可 | 該当なし |\n| Performance Recommendations | パフォーマンス向上の推奨事項提供 | 可能 | なし |"
     },
     {
       "id": 35,
@@ -684,14 +451,7 @@
         { "label": "D", "text": "シーケンスオブジェクト" }
       ],
       "answer": "C",
-      "explanation": "Azure Synapse Analytics の専用 SQL プールでサロゲートキーを実装する場合、IDENTITY 列が最速のクエリパフォーマンスを提供する。整数型のため GUID よりストレージ効率が高く、結合パフォーマンスが優れている。SEQUENCE オブジェクトは Synapse の専用 SQL プールでサポートされていない。",
-      "explanation_table": [
-        { "label": "A", "text": "16バイトのランダム値。ストレージ効率が低く結合コストが高い", "correct": false },
-        { "label": "B", "text": "テーブルの分散方式であり、サロゲートキーとは目的が異なる", "correct": false },
-        { "label": "C", "text": "自動増分整数。Synapse の分散アーキテクチャと相性が良く最速", "correct": true },
-        { "label": "D", "text": "Azure Synapse Analytics の専用 SQL プールではサポートされていない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure Synapse Analytics の専用 SQL プールでサロゲートキーを実装する場合、IDENTITY 列が最速のクエリパフォーマンスを提供する。整数型のため、GUID よりもストレージ効率が高く結合パフォーマンスが優れている。\n\n| 選択肢 | 特徴 | クエリパフォーマンス |\n|---|---|---|\n| IDENTITY 列 | 自動増分整数。Synapse の分散アーキテクチャと相性が良い | 最速 |\n| GUID 列 | 16バイトのランダム値。ストレージ効率が低く、結合コストが高い | 低速 |\n| ハッシュ分散キー | テーブルの分散方式であり、サロゲートキーとは目的が異なる | 該当なし |\n| シーケンスオブジェクト | Azure Synapse Analytics の専用 SQL プールではサポートされていない | 非対応 |"
     },
     {
       "id": 36,
@@ -704,14 +464,7 @@
         { "label": "D", "text": "Azure portal から、Azure Advisor の運用効率アラートを作成する" }
       ],
       "answer": "A",
-      "explanation": "Azure Service Health アラートは、複数リージョンのメンテナンスイベントを一元的に監視し、音声通知を含む様々な通知方法をサポートする。一度設定すれば全リージョンをカバーでき、管理作業が最小限で済む。",
-      "explanation_table": [
-        { "label": "A", "text": "複数リージョンを一元管理可能・音声通知対応・管理作業が低い", "correct": true },
-        { "label": "B", "text": "リソースごとに設定が必要。100インスタンス×10リージョン分の設定が必要で管理作業が多い", "correct": false },
-        { "label": "C", "text": "100インスタンスそれぞれに設定が必要。管理作業が非常に多い", "correct": false },
-        { "label": "D", "text": "コスト最適化・パフォーマンス向上の推奨事項向け。メンテナンス通知には不適切", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure Service Health（サービスヘルス）は、Azure サービスの計画メンテナンスや障害などの健全性情報を提供するサービス。サービスヘルスアラートを設定することで、複数リージョンを一元的に監視し、音声通知を含む様々な通知方法をサポートする。\n\n| アラートの種類 | 用途 | 複数リージョン対応 | 管理作業の負荷 |\n|---|---|---|---|\n| サービスヘルスアラート | サービス障害・計画メンテナンス通知 | 一元管理可能 | 低い |\n| アクティビティログアラート | リソース操作履歴の監視 | リソースごとに設定が必要 | 中程度 |\n| SQL Server エージェントジョブ | SQL Server 内部のジョブスケジューリング | 100インスタンスそれぞれに設定が必要 | 非常に高い |\n| Azure Advisor 運用効率アラート | コスト最適化・パフォーマンス向上の推奨事項 | メンテナンス通知には不適切 | 該当なし |"
     },
     {
       "id": 37,
@@ -724,14 +477,7 @@
         { "label": "D", "text": "Azure Automation の変数を設定する" }
       ],
       "answer": "A",
-      "explanation": "Azure Automation を使用するには、まず最初に Azure Automation アカウントを作成する必要がある。これは Automation リソース（ランブック・モジュール・資格情報・変数など）を含むコンテナとして機能する最初の前提条件。",
-      "explanation_table": [
-        { "label": "A", "text": "すべての Automation リソースのコンテナ。最初に作成する必要がある", "correct": true },
-        { "label": "B", "text": "オンプレミスリソース向けのエージェント。Azure SQL 論理サーバー（クラウド内）の管理には不要", "correct": false },
-        { "label": "C", "text": "Automation アカウント作成後に設定できる", "correct": false },
-        { "label": "D", "text": "Automation アカウント作成後に設定できる", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure Automation を使用して SQL Server の管理タスクを自動化するには、まず最初に Azure Automation アカウントを作成する必要がある。これは Azure Automation サービスを利用するための基本的な前提条件。\n\n| リソースタイプ | 説明 | 作成順序 |\n|---|---|---|\n| Automation アカウント | すべての Automation リソースのコンテナ | 1（最初） |\n| 資格情報 | ランブックが Azure リソースにアクセスするための認証情報 | 2 |\n| ランブック | 自動化タスクを実行するためのスクリプト | 3 |\n| スケジュール | ランブックの実行タイミングを定義 | 4 |\n| 変数 | ランブック内で使用する値を保存 | 必要に応じて |\n| Hybrid Runbook Worker | オンプレミスリソースに対してランブックを実行するためのエージェント | 特殊なケース |"
     },
     {
       "id": 38,
@@ -740,38 +486,24 @@
       "choices": [
         { "label": "A", "text": "シーケンシャルインデックスキーを非シーケンシャルキーに置き換える" },
         { "label": "B", "text": "メモリ最適化テーブルを実装する" },
-        { "label": "C", "text": "ALTER DATABASE SCOPED CONFIGURATION CLEAR PROCEDURE_CACHE コマンドを実行する" },
-        { "label": "D", "text": "DBCC SHRINKDATABASE コマンドを実行する" }
+        { "label": "C", "text": "`ALTER DATABASE SCOPED CONFIGURATION CLEAR PROCEDURE_CACHE` コマンドを実行する" },
+        { "label": "D", "text": "`DBCC SHRINKDATABASE` コマンドを実行する" }
       ],
       "answer": "A",
-      "explanation": "シーケンシャル（連続的）なインデックスキーを使用すると、データ挿入時に「ホットスポット」と呼ばれる競合が発生し、tempDB のコンテンションの原因となる。非シーケンシャルキー（GUID・ハッシュ値など）に置き換えることで解決できる。",
-      "explanation_table": [
-        { "label": "A", "text": "シーケンシャルキーによるホットスポット（tempDB 競合）を解消できる", "correct": true },
-        { "label": "B", "text": "メモリ内処理でパフォーマンスは向上するが、tempDB のコンテンション問題に直接対処しない", "correct": false },
-        { "label": "C", "text": "プロシージャキャッシュをクリアするコマンド。tempDB のコンテンション問題とは無関係", "correct": false },
-        { "label": "D", "text": "データベースファイルのサイズを縮小するコマンド。パフォーマンス問題の解決には適していない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "tempDB のコンテンション（競合）によるパフォーマンス問題の解決方法が問われています。\n\nシーケンシャル（連続的）なインデックスキーを使用すると、特にデータの挿入時に「ホットスポット」と呼ばれる競合が発生します。シーケンシャルキー（例：連続する数値や日付）を非シーケンシャルキー（例：GUID、ハッシュ値）に置き換えることで、この問題を解決できます。\n\n| tempDB コンテンションの一般的な原因 | 解決策 |\n|---|---|\n| シーケンシャルインデックスキー | 非シーケンシャルキーに置き換える |\n| 大量の一時テーブル作成 | クエリの最適化、テーブル変数の使用検討 |\n| 大量の並列クエリ | MAXDOP の設定調整 |\n| インデックス再構築 | メンテナンス作業のスケジュール最適化 |"
     },
     {
       "id": 39,
       "question": "データのスキャンと分類をサービスとして提供することでデータ探索を自動化するために使用できる機能はどれですか？（一つ選択）",
       "type": "single",
       "choices": [
-        { "label": "A", "text": "Azure Purview（現: Microsoft Purview）" },
+        { "label": "A", "text": "Azure Purview" },
         { "label": "B", "text": "データベース監査" },
         { "label": "C", "text": "動的データマスキング" },
         { "label": "D", "text": "Azure Data Catalog" }
       ],
       "answer": "A",
-      "explanation": "Microsoft Purview（旧 Azure Purview）は、データガバナンスサービスとして、データ探索の自動化・データカタログ作成・データ分類・データ系統の追跡などの機能を提供する。\n\n⚠️ 名称変更（2026-04-21）: Azure Purview は現在 Microsoft Purview に改名されている。機能・役割は同一。",
-      "explanation_table": [
-        { "label": "A", "text": "データガバナンス・カタログ作成・データ探索の自動化・分類機能あり", "correct": true },
-        { "label": "B", "text": "アクセス監視・セキュリティ監査が目的。データ探索の自動化はなし", "correct": false },
-        { "label": "C", "text": "機密データの保護が目的。データ探索の自動化はなし", "correct": false },
-        { "label": "D", "text": "Microsoft Purview の前身（廃止予定）。Purview ほど包括的な機能はない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "**⚠️ 名称変更（2026-04-21）:** Azure Purview は現在 **Microsoft Purview** に改名されている。試験では「Microsoft Purview」として出題される可能性が高い。機能・役割は同一。\n\nMicrosoft Purview は、データガバナンスサービスであり、データ探索の自動化、データカタログ作成、データ分類、データ系統の追跡などの機能を提供する。\n\n| 機能 | 主な目的 | データ探索の自動化 | データ分類機能 |\n|---|---|---|---|\n| Microsoft Purview（旧 Azure Purview） | データガバナンス、カタログ作成、分類 | あり | あり |\n| データベース監査 | アクセス監視、セキュリティ監査 | なし | なし |\n| 動的データマスキング | 機密データの保護 | なし | なし |\n| Azure Data Catalog | データソース登録（Purview の前身、廃止予定） | 限定的 | 限定的 |"
     },
     {
       "id": 40,
@@ -784,14 +516,7 @@
         { "label": "D", "text": "PARAMETERIZATION を FORCED に設定する" }
       ],
       "answer": "A",
-      "explanation": "READ_COMMITTED_SNAPSHOT を ON に設定すると、読み取りトランザクションが行ロックを取得せず、データの一貫性のあるスナップショットを使用するようになる。これにより読み取りと書き込みの間のブロッキングが防止される（行バージョニングを使用）。",
-      "explanation_table": [
-        { "label": "A", "text": "読み取りトランザクションが行ロックを取得せずスナップショットを使用。読み取り/書き込み間のブロッキングを防止", "correct": true },
-        { "label": "B", "text": "スナップショット分離レベルを有効にするが、アプリケーションが明示的に使用する必要あり。自動的には防止しない", "correct": false },
-        { "label": "C", "text": "コミット操作のパフォーマンス向上が目的。読み取り/書き込みのブロッキングには対処しない", "correct": false },
-        { "label": "D", "text": "クエリのパラメーター化に関するもの。ブロッキング問題とは無関係", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "READ_COMMITTED_SNAPSHOT オプションを ON に設定すると、読み取りトランザクションが行ロックを取得せず、データの一貫性のあるスナップショットを使用するようになる。これにより、読み取り操作と書き込み操作の間のブロッキングが防止される（行バージョニングを使用して実現）。\n\n| データベースオプション | 目的 | ブロッキング防止効果 |\n|---|---|---|\n| READ_COMMITTED_SNAPSHOT | 読み取りトランザクションが行ロックを取得せずデータのスナップショットを使用 | 読み取り/書き込み間のブロッキングを防止 |\n| ALLOW_SNAPSHOT_ISOLATION | スナップショット分離レベルを有効にするが、アプリケーションが明示的に使用する必要あり | 自動的には防止しない |\n| Delayed Durability | トランザクションのコミット操作のパフォーマンスを向上 | 読み取り/書き込みのブロッキングには対処しない |\n| PARAMETERIZATION FORCED | クエリのパラメーター化に関するもの | ブロッキング問題とは無関係 |"
     },
     {
       "id": 41,
@@ -804,18 +529,11 @@
         { "label": "D", "text": "Azure SQL Managed Instance" }
       ],
       "answer": "A",
-      "explanation": "Azure SQL Database サーバーレスは、使用パターンが断続的なワークロードに最適。非アクティブな期間中はコンピューティングリソースを自動停止し、ストレージコストのみ課金される。1日8時間未満の使用では最もコスト効率が高い。",
-      "explanation_table": [
-        { "label": "A", "text": "非アクティブ時はストレージコストのみ。断続的利用に最適", "correct": true },
-        { "label": "B", "text": "非アクティブ時もコンピューティング+ストレージが課金される", "correct": false },
-        { "label": "C", "text": "複数 DB 共有向け。単一 DB での利用はコスト効率が低い", "correct": false },
-        { "label": "D", "text": "高度な互換性要件向け。コストが最も高い", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure SQL Database サーバーレスは、使用パターンが断続的で予測不可能なワークロードに最適なコンピューティング課金モデル。非アクティブな期間中は自動的にコンピューティングリソースを一時停止し、クエリの実行時にのみ自動的に再開する。\n\n1日8時間未満しか使用されないため、サーバーレスモデルが最も費用対効果が高くなる。\n\n| 課金モデル | 非アクティブ時の課金 | 使用パターン適合性 | 相対的コスト効率 |\n|---|---|---|---|\n| サーバーレス | ストレージのみ | 断続的/予測不可能 | 最高 |\n| 従量課金 | コンピューティング＋ストレージ | 継続的 | 中 |\n| エラスティックプール | コンピューティング＋ストレージ | 複数DB共有 | 低（単一DB向けではない） |\n| Managed Instance | コンピューティング＋ストレージ | 高度な互換性要件 | 最低（高コスト） |"
     },
     {
       "id": 42,
-      "question": "オンプレミスの Microsoft SQL Server（Server1）に db1 というデータベースがあります。Azure SQL Managed Instance（Instance1）へのオンライン移行を計画しています。Server1 と Instance1 の両方に接続するために使用するログインをどのサーバーロールに追加すべきですか？（一つ選択）",
+      "question": "オンプレミスの Microsoft SQL Server（Server1）に db1 という名前のデータベースがあります。Azure SQL Managed Instance（Instance1）へのオンライン移行を計画しています。Server1 と Instance1 の両方に接続するために使用するログインを、各サーバーの適切なサーバーロールに追加する必要があります。このログインをどのサーバーロールに追加すべきですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "setupadmin" },
@@ -824,14 +542,7 @@
         { "label": "D", "text": "diskadmin" }
       ],
       "answer": "B",
-      "explanation": "オンラインマイグレーションには、バックアップ作成・データベース復元・システム情報読み取りなど広範な権限が必要なため、ソース（オンプレミス SQL Server）とターゲット（Azure SQL Managed Instance）の両方で sysadmin 権限が必要。",
-      "explanation_table": [
-        { "label": "A", "text": "サーバー構成とリンクサーバーの管理向け。移行に必要な完全な権限なし", "correct": false },
-        { "label": "B", "text": "すべてのサーバーレベル操作とデータベース操作が可能。移行に必要な権限を持つ", "correct": true },
-        { "label": "C", "text": "データベースの作成と削除（Azure SQL Database 固有）。移行プロセス全体には不十分", "correct": false },
-        { "label": "D", "text": "ディスクファイルの管理向け。データベース移行には不適切", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "オンプレミスの SQL Server から Azure SQL Managed Instance へのオンライン移行を実行するには、バックアップの作成、データベースの復元、システム情報の読み取りなど広範な権限が必要なため、sysadmin ロールが最適。\n\n| サーバーロール | 主な権限 | 移行に適しているか |\n|---|---|---|\n| sysadmin | すべてのサーバーレベル操作とデータベース操作 | はい |\n| setupadmin | サーバー構成とリンクサーバーの管理 | いいえ（移行に必要な完全な権限なし） |\n| dbmanager | データベースの作成と削除（Azure SQL Database 固有） | いいえ（移行プロセス全体を管理するには不十分） |\n| diskadmin | ディスクファイルの管理 | いいえ（データベース移行には不適切） |"
     },
     {
       "id": 43,
@@ -844,15 +555,7 @@
         { "label": "D", "text": "Transact-SQL を使用して force_last_good_plan オプションを有効にする" }
       ],
       "answer": "D",
-      "explanation": "⚠️ 解答の修正（2026-04-21）: Microsoft Learn 公式ドキュメントによると、Azure SQL Managed Instance の自動チューニング（FORCE_LAST_GOOD_PLAN）を実装する正しい方法は T-SQL（ALTER DATABASE）のみ。\n\nALTER DATABASE <yourDatabase> SET AUTOMATIC_TUNING ( FORCE_LAST_GOOD_PLAN = ON );\n\n・SQL MI の自動チューニングは FORCE_LAST_GOOD_PLAN のみサポート（CREATE INDEX / DROP INDEX はサポートなし）\n・REST API・Azure Portal・PowerShell での直接設定は SQL MI では非対応",
-      "explanation_table": [
-        { "label": "A", "text": "REST API の AutomaticTuningServerMode は SQL MI には適用されない（元の問題の解答だが誤り）", "correct": false },
-        { "label": "B", "text": "Azure Portal での自動チューニング設定は SQL MI ではサポートされていない", "correct": false },
-        { "label": "C", "text": "PowerShell での FORCE_LAST_GOOD_PLAN の直接設定は SQL MI では不可", "correct": false },
-        { "label": "D", "text": "T-SQL（ALTER DATABASE）が SQL MI で自動チューニングを設定する唯一の方法", "correct": true }
-      ],
-      "note": "元の問題の解答は A（REST API）だったが、Microsoft Learn 公式ドキュメントにより D（T-SQL）が正しい。2026-04-21 修正。",
-      "deprecated": false
+      "explanation": "**⚠️ 解答の修正（2026-04-21）:**\nMicrosoft Learn 公式ドキュメントによると、Azure SQL Managed Instance の自動チューニング（`FORCE_LAST_GOOD_PLAN`）を実装する正しい方法は **T-SQL（ALTER DATABASE）** であり、REST API ではない。\n\n> *\"For Azure SQL Managed Instance, the supported option `FORCE_LAST_GOOD_PLAN` can only be configured through T-SQL.\"*\n\n```sql\nALTER DATABASE <yourDatabase>\nSET AUTOMATIC_TUNING ( FORCE_LAST_GOOD_PLAN = ON );\n```\n\n| 方法 | Azure SQL Database | Azure SQL Managed Instance |\n|---|---|---|\n| Azure Portal | サポート済み | **サポート外**（インデックスチューニングも不可） |\n| REST API | サポート済み | **不可** |\n| T-SQL（ALTER DATABASE） | サポート済み | **サポート済み（唯一の方法）** |\n| PowerShell | サポート済み | 限定的（FORCE_LAST_GOOD_PLAN の直接設定は不可） |\n\n- SQL MI の自動チューニングは `FORCE_LAST_GOOD_PLAN` のみサポート（CREATE INDEX / DROP INDEX はサポートなし）"
     },
     {
       "id": 44,
@@ -865,14 +568,7 @@
         { "label": "D", "text": "SQLVMI で Azure Monitor エージェントをインストールする" }
       ],
       "answer": "A",
-      "explanation": "Query Store はデータベースレベルの機能であり、まず対象のデータベース（OBI）で有効化する必要がある。SSMS で OBI データベースを右クリック →「プロパティ」→「クエリストア」ページ →「操作モード（読み取り/書き込み）」を選択して有効化する。",
-      "explanation_table": [
-        { "label": "A", "text": "Query Store はデータベースレベルの設定。データベースプロパティから有効化するのが正しい手順", "correct": true },
-        { "label": "B", "text": "正しい方向性だが、具体的な操作場所（データベースプロパティ）が明示されている A が正解", "correct": false },
-        { "label": "C", "text": "VM 上の SQL Server 管理用の拡張機能。Query Store 設定とは無関係", "correct": false },
-        { "label": "D", "text": "モニタリング用のエージェント。Query Store 機能とは無関係", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Query Store はデータベースレベルの機能であり、データベースごとに個別に有効化する必要がある。まず対象のデータベース（OBI）で Query Store 機能を有効化する。\n\n手順：SSMS を開く → OBI データベースを右クリックして「プロパティ」を選択 → 「クエリストア」ページで「操作モード（読み取り/書き込み）」を選択\n\n| 選択肢 | 関連性 | 説明 |\n|---|---|---|\n| データベースプロパティの変更 | 直接関連 | Query Store はデータベースレベルの設定。データベースプロパティから有効化する |\n| Query Store の有効化 | 関連あり | 正しい方向性だが、具体的な操作場所が不明確 |\n| SQL Server IaaS Agent 拡張機能 | 無関係 | VM 上の SQL Server 管理用の拡張機能だが、Query Store 設定とは無関係 |\n| Azure Monitor エージェント | 無関係 | モニタリング用のエージェントであり、Query Store 機能とは無関係 |"
     },
     {
       "id": 45,
@@ -885,18 +581,11 @@
         { "label": "D", "text": "Azure Database for PostgreSQL" }
       ],
       "answer": "C",
-      "explanation": "分散トランザクション（MSDTC）を使用する SQL Server データベースを移行する場合、Azure SQL Managed Instance が最適。オンプレミス SQL Server との高い互換性を持ち、MSDTC をサポートしている。",
-      "explanation_table": [
-        { "label": "A", "text": "MSDTC（分散トランザクション）のネイティブサポートなし", "correct": false },
-        { "label": "B", "text": "MSDTC のネイティブサポートなし", "correct": false },
-        { "label": "C", "text": "MSDTC サポートあり・SQL Server との高い互換性", "correct": true },
-        { "label": "D", "text": "SQL Server 互換でない。分散トランザクションもサポートしない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "分散トランザクションを使用する SQL Server データベースを移行する場合、Azure SQL Managed Instance が最適な選択肢。MSDTC（Microsoft Distributed Transaction Coordinator）をサポートしている。\n\n| サービス | MSDTC（分散トランザクション）サポート | SQL Server 互換性 |\n|---|---|---|\n| Azure SQL Managed Instance | あり | 高い |\n| Azure SQL Database | なし（ネイティブサポートなし） | 中程度 |\n| Azure SQL Database Hyperscale | なし（ネイティブサポートなし） | 中程度 |\n| Azure Database for PostgreSQL | なし（SQL Server 互換でない） | なし |"
     },
     {
       "id": 46,
-      "question": "オンプレミスのデータセンターに 14TB の Microsoft SQL Server データベースがあります。Azure SQL Managed Instance を作成し移行する計画です。SQL Managed Instance をサポートするサービスティアはどれですか？（該当するものをすべて選択）",
+      "question": "オンプレミスのデータセンターに 14TB の Microsoft SQL Server データベースがあります。Azure SQL Managed Instance を作成し、オンプレミスデータベースを新しいインスタンスに移行する計画です。SQL Managed Instance をサポートするサービスティアはどれですか？（該当するものをすべて選択）",
       "type": "multiple",
       "answer_count": 2,
       "choices": [
@@ -907,35 +596,20 @@
         { "label": "E", "text": "Premium" }
       ],
       "answer": ["A", "B"],
-      "explanation": "Azure SQL Managed Instance がサポートするサービスティアは 2 つ:\n・General Purpose: コスト効率の高いビジネスワークロード向け。リモートストレージ使用\n・Business Critical: 高パフォーマンス・高可用性向け。ローカル SSD・インメモリ OLTP サポート\n\nHyperscale は Azure SQL Database のみ。Standard/Premium は Azure SQL Database の古いティア名であり Managed Instance には存在しない。",
-      "explanation_table": [
-        { "label": "A", "text": "SQL Managed Instance でサポート。ローカル SSD・インメモリ OLTP・高可用性", "correct": true },
-        { "label": "B", "text": "SQL Managed Instance でサポート。リモートストレージ・一般的なワークロード向け", "correct": true },
-        { "label": "C", "text": "Azure SQL Database のみ対応。Managed Instance では非サポート", "correct": false },
-        { "label": "D", "text": "Azure SQL Managed Instance のサービスティアとしては存在しない", "correct": false },
-        { "label": "E", "text": "Azure SQL Managed Instance のサービスティアとしては存在しない", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Azure SQL Managed Instance は以下の 2 つのサービスティアをサポートしている：\n\n1. **General Purpose**: コスト効率の高いビジネスワークロード向け。リモートストレージを使用。\n2. **Business Critical**: 高パフォーマンスと高可用性が必要なミッションクリティカルなアプリケーション向け。ローカル SSD を使用。\n\n**⚠️ 最新情報（2026-04-21）:** General Purpose の上位として **Next-gen General Purpose** が登場。最大 128 vCore・32 TB ストレージ・500 データベース/インスタンスに対応するが、課金上は \"General Purpose\" として扱われる。\n\n| サービスティア | 主な特徴 | 適したワークロード |\n|---|---|---|\n| General Purpose | バランスのとれたコンピューティングとストレージ、リモートストレージ | 大部分のビジネスワークロード |\n| Next-gen General Purpose | General Purpose のアーキテクチャアップグレード版。最大 32 TB・500 DB/インスタンス | 高性能が必要なコスト重視のワークロード |\n| Business Critical | 高パフォーマンス、高可用性、ローカル SSD、インメモリ OLTP | ミッションクリティカルなアプリケーション |\n| Hyperscale | **Azure SQL Database のみ対応。Managed Instance では非サポート** | — |\n| Standard / Premium | Azure SQL Database の古いサービスティア名（Managed Instance には存在しない） | — |"
     },
     {
       "id": 47,
-      "question": "Azure Synapse Analytics 専用 SQL プールがあります。PDW_SHOWSPACEUSED('dbo.FactInternetSales') を実行すると、すべてのディストリビューションにデータが均等に分散されていることがわかりました。dbo.FactInternetSales テーブルについて正確に説明している記述はどれですか？（一つ選択）",
+      "question": "Azure Synapse Analytics 専用 SQL プールがあります。`PDW_SHOWSPACEUSED('dbo.FactInternetSales');` を実行すると、結果が表示されました。dbo.FactInternetSales テーブルについて正確に説明している記述はどれですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "テーブルはハッシュ分散方式を使用しており、データ分布に偏りがある" },
         { "label": "B", "text": "テーブルはラウンドロビン分散方式を使用している" },
-        { "label": "C", "text": "すべてのディストリビューションにデータが含まれていない" },
+        { "label": "C", "text": "すべてのディストリビューションにデータが含まれている" },
         { "label": "D", "text": "テーブルには 60 個以上のディストリビューションが存在する" }
       ],
       "answer": "B",
-      "explanation": "ラウンドロビン分散方式の特徴は、データが各ディストリビューションに均等に分散されること。PDW_SHOWSPACEUSED で各ディストリビューションのサイズが均一な場合、ラウンドロビン分散を使用していることを示す。Azure Synapse Analytics の専用 SQL プールはデフォルトで 60 個固定のディストリビューションを持つ。",
-      "explanation_table": [
-        { "label": "A", "text": "ハッシュ分散は特定列の値に基づき分散するため、データの偏りが生じる可能性がある", "correct": false },
-        { "label": "B", "text": "各ディストリビューションにデータが均等に分散 = ラウンドロビン方式の特徴", "correct": true },
-        { "label": "C", "text": "均等に分散されているため、すべてのディストリビューションにデータが存在する", "correct": false },
-        { "label": "D", "text": "Synapse Analytics の専用 SQL プールは 60 個固定（以上ではない）", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "`PDW_SHOWSPACEUSED` は、テーブルのディストリビューション（分散）状況を確認するためのストアドプロシージャ。\n\nラウンドロビン分散方式では、行が追加される順に各ディストリビューションに順番に割り当てられるため、データ量が均等になる。\n\n| 分散方式 | 特徴 | 確認方法 |\n|---|---|---|\n| ラウンドロビン | 各ディストリビューションにデータが均等に分散される | PDW_SHOWSPACEUSED で各ディストリビューションのサイズが均一 |\n| ハッシュ | 特定の列の値に基づいて分散、データ偏りの可能性あり | PDW_SHOWSPACEUSED で各ディストリビューションのサイズに差がある場合がある |\n| レプリケート | 小さいテーブル向け、各ノードに完全コピーを配置 | PDW_SHOWSPACEUSED では確認できない |\n\nAzure Synapse Analytics の専用 SQL プールでは、デフォルトで 60 個のディストリビューションが存在する（60 個固定）。テーブル作成時に分散方式を指定しない場合、自動的にラウンドロビン分散方式が適用される。"
     },
     {
       "id": 48,
@@ -948,21 +622,13 @@
         { "label": "D", "text": "Azure SQL Auditing を有効にする" }
       ],
       "answer": "B",
-      "explanation": "出題当時の正解は B（監視プロファイルを最初に作成する）。\n\n⚠️ SQL Insights は 2024年12月31日に廃止済み。現在の試験では出題されない可能性が高い。Azure SQL DB / SQL MI の代替推奨: database watcher。",
-      "explanation_table": [
-        { "label": "A", "text": "SQL Insights のデータ保存先（プロファイル作成後に設定）", "correct": false },
-        { "label": "B", "text": "SQL リソースからのデータ収集方法を定義。SQL Insights の構成に最初に必要（廃止前）", "correct": true },
-        { "label": "C", "text": "データベースパフォーマンスの自動最適化。SQL Insights とは別の機能", "correct": false },
-        { "label": "D", "text": "セキュリティ監査とコンプライアンス。SQL Insights とは別の機能", "correct": false }
-      ],
+      "explanation": "**解答:** B（※出題当時の正解。SQL Insights は 2024年12月31日に廃止済み）\n\n**⚠️ 最新情報（廃止済み）:**\n- SQL Insights は 2024年12月31日に廃止。Microsoft Learn 公式ドキュメントに廃止が明記されている\n- Azure SQL DB / SQL MI の代替推奨: **database watcher**\n\n| 機能 | 目的 | SQL Insights との関連性 |\n|---|---|---|\n| 監視プロファイル | SQL リソースからのデータ収集方法を定義 | SQL Insights の構成に必須（廃止前） |\n| Azure Monitor ワークスペース | 監視データの保存と分析 | SQL Insights のデータ保存先（プロファイル作成後に設定） |\n| 自動チューニング | データベースパフォーマンスの自動最適化 | SQL Insights とは別の機能 |\n| Azure SQL Auditing | セキュリティ監査とコンプライアンス | SQL Insights とは別の機能 |",
       "deprecated": true,
-      "deprecation_note": "SQL Insights は 2024年12月31日に廃止済み。現在の試験では出題されない可能性が高い。代替は database watcher または診断設定 + Log Analytics。",
-      "skip": true,
-      "skip_note": "SQL Insights 廃止済みのため出題対象外。"
+      "deprecation_note": "SQL Insights は 2024年12月31日に廃止済み。現在の試験では出題されない可能性が高い。代替は database watcher（Azure SQL DB/MI 向け）。"
     },
     {
       "id": 49,
-      "question": "オンプレミスネットワークには、db1 という名前のデータベースをホストする Microsoft SQL Server 2016 サーバーがあります。db1 を Azure SQL Managed Instance に移行する計画です。ディスクレイテンシーを最小限に抑える必要があります。どのサービスティアを使用すべきですか？（一つ選択）",
+      "question": "オンプレミスネットワークには、db1 という名前のデータベースをホストする Microsoft SQL Server 2016 サーバーがあります。Azure サブスクリプションを持っており、db1 を Azure SQL Managed Instance に移行する計画です。SQL Managed Instance を作成する必要があります。ディスクレイテンシーを最小限に抑える必要があります。どのサービスティアを使用すべきですか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "General Purpose" },
@@ -971,18 +637,11 @@
         { "label": "D", "text": "Hyperscale" }
       ],
       "answer": "B",
-      "explanation": "Business Critical ティアは、データベースエンジン・データファイル・ログファイル・tempdb がローカル SSD に直接配置されるため、ディスクレイテンシーが最小になる。インメモリ OLTP もサポートしており、さらなるパフォーマンス向上が可能。",
-      "explanation_table": [
-        { "label": "A", "text": "リモートストレージを使用するため Business Critical と比較してレイテンシーが高い", "correct": false },
-        { "label": "B", "text": "ローカル SSD を使用。ディスクレイテンシーが最小", "correct": true },
-        { "label": "C", "text": "Azure SQL Managed Instance のサービスティアとしては存在しない", "correct": false },
-        { "label": "D", "text": "Azure SQL Managed Instance では利用不可", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Business Critical ティアは、ディスクレイテンシーを最小限に抑えるために設計されている。データベースエンジン、そのファイル（データとログ）、tempdb がローカル SSD に直接配置されるため、I/O 操作のレイテンシーが大幅に削減される。\n\n| サービスティア | ストレージタイプ | レイテンシー | 用途 |\n|---|---|---|---|\n| Business Critical | ローカル SSD | 最小 | 低レイテンシーが必要なミッションクリティカルなワークロード |\n| General Purpose | リモートストレージ | 中程度 | 一般的なビジネスワークロード |\n| Hyperscale | — | — | Azure SQL Managed Instance では利用不可 |\n| Standard | — | — | Azure SQL Managed Instance のサービスティアとしては存在しない |"
     },
     {
       "id": 50,
-      "question": "Azure Synapse Analytics の専用 SQL プールに Table1 というテーブルがあります。Azure Data Lake Storage Gen2 の container1 内のファイルのデータは Table1 に格納されています。container1 にリンクされたファイルの DateTime を Table1 の追加列として格納する必要があります。解決策：Azure Data Factory パイプラインに、DateTime を持つファイルの Get Metadata アクティビティを追加し、このアクティビティの実行後に Table1 へ格納する。この解決策は目標を達成しますか？（一つ選択）",
+      "question": "Azure Synapse Analytics の専用 SQL プールに Table1 というテーブルがあります。Azure Data Lake Storage Gen2 の container1 というコンテナ内のファイルのデータは Table1 に格納され、Table1 はそのファイルのサービングレイヤーになっています。container1 にリンクされたファイルの DateTime を Table1 の追加列として格納する必要があります。解決策：Azure Data Factory パイプラインに、DateTime を持つファイルの Get Metadata アクティビティを追加し、このアクティビティの実行後に Table1 へ格納する。この解決策は目標を達成しますか？（一つ選択）",
       "type": "single",
       "choices": [
         { "label": "A", "text": "はい、Get Metadata アクティビティでファイルのメタデータを取得し Table1 に格納できます" },
@@ -990,13 +649,7 @@
         { "label": "C", "text": "いいえ、代わりに Get Metadata アクティビティの結果をパラメータとして使用し、Stored Procedure アクティビティと組み合わせる必要があります" }
       ],
       "answer": "B",
-      "explanation": "Get Metadata アクティビティはファイルのメタデータを取得するだけで、データの移動や変換は行わない。正しい解決策は Copy Activity を使用し、「Additional columns」設定でソースデータに存在しない列（DateTime）を追加すること。",
-      "explanation_table": [
-        { "label": "A", "text": "Get Metadata 単独ではテーブルへのデータ挿入時に自動的に列として追加できない", "correct": false },
-        { "label": "B", "text": "Copy Activity の Additional columns 設定でファイルのメタデータ（@timestamp 等）を列として追加できる", "correct": true },
-        { "label": "C", "text": "Stored Procedure との組み合わせは可能だが、Copy Activity の方がシンプルで適切", "correct": false }
-      ],
-      "deprecated": false
+      "explanation": "Get Metadata アクティビティはファイルのメタデータ（作成日時、最終更新日時、サイズなど）を取得できるが、単独ではテーブルにデータを挿入する際に自動的にその情報を列として追加することはできない。\n\n正しい解決策は、Copy Activity を使用し、そのソース設定で追加列として DateTime を指定すること。Copy Activity では「Additional columns」設定を使用して、ソースデータに存在しない列を追加できる。この設定では、固定値、ファイルのメタデータ（`@filePath`、`@timestamp` 等）、またはパイプラインのパラメータや変数を値として使用できる。"
     }
   ]
 }

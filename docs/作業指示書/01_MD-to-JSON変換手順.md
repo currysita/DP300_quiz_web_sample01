@@ -70,10 +70,26 @@
 - multiple: `["A", "C"]` のような文字列配列（「A、C」や「A・C」を分割）
 
 #### `explanation`
-`<details>` ブロック内の解答行の直後から、解説テーブルの直前までのテキスト。
+`<details>` ブロック内の解答行の直後から `</details>` までの全テキスト。
 
-#### `explanation_table`
-`<details>` ブロック内の Markdown テーブルを変換する。
+**Markdown テーブル・コードブロックをそのまま含めてよい。** UI 側（marked.js）がレンダリングするため、HTML に変換せず Markdown のまま格納する。
+
+```
+**解答:** A
+
+本文テキスト...
+
+| 列1 | 列2 |
+|---|---|
+| 値A | 値B |
+```
+
+上記のような解説テーブルが元 Markdown に存在する場合は、テーブル部分も含めて `explanation` に格納する。
+
+#### `explanation_table`（任意・省略可）
+各選択肢の正否を UI でテーブル表示したい場合のみ使用する。通常の変換では省略してよい。
+
+使用する場合は `<details>` ブロック内の Markdown テーブルを変換する。
 
 ```json
 { "label": "A", "text": "説明文", "correct": true }

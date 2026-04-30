@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(python3 -c ' *)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Read(//c/Users/curry/.claude/projects/c--Users-curry-OneDrive-----------------DP300-quiz-web/memory/**)",
+      "Read(//mnt/c/Users/curry/OneDrive/プロジェクト/個人プロジェクト/DP300_quiz_web/**)",
+      "Bash(powershell -Command \"Get-Content 'c:\\\\Users\\\\curry\\\\OneDrive\\\\プロジェクト\\\\個人プロジェクト\\\\DP300_quiz_web\\\\data\\\\q051-100.json' | Select-Object -Last 20\")",
+      "Bash(powershell -Command ' *)",
+      "Bash(python gen_q051.py)",
+      "Bash(python gen_q051_part2.py)",
+      "Bash(python gen_q101_part1.py)",
+      "Bash(python gen_q101_part2.py)",
+      "Bash(python -c \"import sys; print\\(sys.stdout.encoding\\)\")"
     ]
   }
 }
