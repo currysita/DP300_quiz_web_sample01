@@ -4,46 +4,9 @@
  */
 const QUIZ_LIST = [
   {
-    id: 'q001-050',
-    title: 'DP-300 問題集 第1回',
-    range: '問題 1〜50',
-    file: 'data/q001-050.json'
-  },
-  {
-    id: 'q051-100',
-    title: 'DP-300 問題集 第2回',
-    range: '問題 51〜100',
-    file: 'data/q051-100.json'
-  },
-  {
-    id: 'q101-150',
-    title: 'DP-300 問題集 第3回',
-    range: '問題 101〜150',
-    file: 'data/q101-150.json'
-  },
-  {
-    id: 'q151-200',
-    title: 'DP-300 問題集 第4回',
-    range: '問題 151〜200',
-    file: 'data/q151-200.json'
-  },
-  {
-    id: 'q201-250',
-    title: 'DP-300 問題集 第5回',
-    range: '問題 201〜250',
-    file: 'data/q201-250.json'
-  },
-  {
-    id: 'q251-300',
-    title: 'DP-300 問題集 第6回',
-    range: '問題 251〜300',
-    file: 'data/q251-300.json'
-  },
-  {
-    id: 'q301-327',
-    title: 'DP-300 問題集 第7回',
-    range: '問題 301〜327',
-    file: 'data/q301-327.json'
+    id: 'mock001',
+    title: 'DP-300 模擬試験001',
+    file: 'data/mock001.json'
   }
 ];
 
