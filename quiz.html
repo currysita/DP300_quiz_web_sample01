@@ -30,12 +30,12 @@
 
         <!-- 問題番号・選択形式・上部ナビ -->
         <div class="d-flex align-items-center justify-content-between mb-3">
-          <button id="btn-prev-top" class="btn btn-sm btn-outline-secondary" disabled>←</button>
-          <div class="d-flex align-items-center gap-2">
-            <span id="question-index" class="badge bg-secondary"></span>
-            <span id="question-type-badge" class="badge bg-primary"></span>
+          <button id="btn-prev-top" class="btn btn-sm btn-outline-secondary" disabled aria-label="前の問題">←</button>
+          <div id="question-badge-group" class="d-flex align-items-center gap-2">
+            <span id="question-index" class="badge bg-secondary" aria-hidden="true"></span>
+            <span id="question-type-badge" class="badge bg-primary" aria-hidden="true"></span>
           </div>
-          <button id="btn-next-top" class="btn btn-sm btn-outline-secondary" disabled>→</button>
+          <button id="btn-next-top" class="btn btn-sm btn-outline-secondary" disabled aria-label="次の問題">→</button>
         </div>
 
         <!-- 問題文 -->
@@ -48,10 +48,10 @@
     </div>
 
     <!-- 採点結果メッセージ -->
-    <div id="result-message" class="alert d-none mb-3" role="alert"></div>
+    <div id="result-message" class="alert d-none mb-3" role="alert" aria-live="assertive"></div>
 
     <!-- 解説 -->
-    <div id="explanation-card" class="card shadow-sm mb-3 d-none">
+    <div id="explanation-card" class="card shadow-sm mb-3 d-none" aria-live="polite">
       <div class="card-header fw-bold">解答・解説</div>
       <div class="card-body">
         <div id="explanation-answer" class="mb-2"></div>
@@ -62,15 +62,15 @@
 
     <!-- 前後ナビゲーション -->
     <div class="d-flex justify-content-between mb-4">
-      <button id="btn-prev" class="btn btn-outline-secondary" disabled>← 前の問題</button>
-      <button id="btn-next" class="btn btn-primary" disabled>次の問題 →</button>
+      <button id="btn-prev" class="btn btn-outline-secondary" disabled><span aria-hidden="true">← </span>前の問題</button>
+      <button id="btn-next" class="btn btn-primary" disabled>次の問題<span aria-hidden="true"> →</span></button>
     </div>
 
     <!-- 問題番号一覧 -->
     <div class="card shadow-sm mb-4">
       <div class="card-body">
         <div class="small text-muted mb-2">問題一覧</div>
-        <div id="question-nav" class="question-nav-grid"></div>
+        <div id="question-nav" class="question-nav-grid" aria-hidden="true"></div>
       </div>
     </div>
 
@@ -146,11 +146,13 @@
         }
 
         // 問題番号・形式
-        $('#question-index').text('問題 ' + (index + 1) + ' / ' + questions.length);
+        const indexLabel = '問題 ' + (index + 1) + ' / ' + questions.length;
         const typeLabel = q.type === 'multiple'
           ? (q.answer_count || 2) + 'つ選択'
           : '一つ選択';
+        $('#question-index').text(indexLabel);
         $('#question-type-badge').text(typeLabel);
+        $('#question-badge-group').attr('aria-label', indexLabel + '、' + typeLabel);
 
         // 問題文（改行を保持）
         $('#question-text').text(q.question);
@@ -162,6 +164,9 @@
             .addClass('btn btn-outline-secondary choice-btn')
             .attr('data-label', c.label)
             .text(c.label + '. ' + c.text);
+          if (q.type === 'multiple') {
+            $btn.attr('aria-pressed', 'false');
+          }
           $choices.append($btn);
         });
 
@@ -252,12 +257,12 @@
               '<td>' + $('<span>').text(row.label).html() + '</td>' +
               '<td>' + $('<span>').text(row.text).html() + '</td>' +
               '<td class="' + (row.correct ? 'text-success fw-bold' : 'text-danger') + '">' +
-              (row.correct ? '✅ 正解' : '❌') + '</td>' +
+              (row.correct ? '正解' : '不正解') + '</td>' +
               '</tr>';
           });
           $('#explanation-table-wrap').html(
             '<table class="table table-bordered table-sm explanation-table">' +
-            '<thead class="table-light"><tr><th>選択肢</th><th>説明</th><th>正否</th></tr></thead>' +
+            '<thead class="table-light"><tr><th scope="col">選択肢</th><th scope="col">説明</th><th scope="col">正否</th></tr></thead>' +
             '<tbody>' + rows + '</tbody></table>'
           );
         } else {
@@ -287,12 +292,12 @@
 
           if (isSelected) {
             // 解除
-            $(this).removeClass('btn-primary').addClass('btn-outline-secondary');
+            $(this).removeClass('btn-primary').addClass('btn-outline-secondary').attr('aria-pressed', 'false');
           } else {
             // 選択済み数が上限に達していたら無視
             const currentSelected = $('#choices .choice-btn.btn-primary').length;
             if (currentSelected >= answerCount) return;
-            $(this).removeClass('btn-outline-secondary').addClass('btn-primary');
+            $(this).removeClass('btn-outline-secondary').addClass('btn-primary').attr('aria-pressed', 'true');
           }
 
           // 採点ボタンの有効/無効・テキスト更新
