@@ -7,6 +7,11 @@ const QUIZ_LIST = [
     id: 'mock001',
     title: 'DP-300 模擬試験001',
     file: 'data/mock001.json'
+  },
+  {
+    id: '目的別_101_拡張イベント',
+    title: '目的別問題集 101 — 拡張イベント ターゲット',
+    file: 'data/目的別_101_拡張イベント.json'
   }
 ];
 

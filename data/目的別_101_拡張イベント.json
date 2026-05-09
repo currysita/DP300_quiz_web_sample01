@@ -1,0 +1,253 @@
+{
+  "id": "目的別_101_拡張イベント",
+  "title": "目的別問題集 101 — 拡張イベント ターゲット",
+  "range": "問題 1〜12",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "SQL Server でクエリのタイムアウトを調査するために拡張イベントセッションを作成しました。収集したデータは不揮発性ストレージに永続化し、セッション終了後も参照できるようにする必要があります。どのターゲットを使用すべきですか？",
+      "choices": [
+        { "label": "A", "text": "ring_buffer" },
+        { "label": "B", "text": "event_file" },
+        { "label": "C", "text": "event_counter" },
+        { "label": "D", "text": "histogram" }
+      ],
+      "answer": "B",
+      "explanation": "event_file はイベントデータをディスク上のファイル（.xel ファイル）に非同期で書き込みます。セッションを停止または再起動した後でもデータが保持されるため、後から参照・分析が必要な場面に適しています。",
+      "explanation_table": [
+        { "label": "A", "text": "メモリ上に循環保存。セッション終了時にデータが消える", "correct": false },
+        { "label": "B", "text": ".xel ファイルに永続保存。セッション終了後も参照可能", "correct": true },
+        { "label": "C", "text": "イベントの発生回数を数えるだけでデータ内容は保持しない", "correct": false },
+        { "label": "D", "text": "列の値ごとに件数を集計するが、内容の永続化が目的ではない", "correct": false }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "Azure SQL Database で拡張イベントセッションを使用してリアルタイムでクエリを観察したい。データの永続化は不要で、できるだけ低オーバーヘッドで現在の状況を確認したい。最も適切なターゲットはどれですか？",
+      "choices": [
+        { "label": "A", "text": "event_file" },
+        { "label": "B", "text": "etw_classic_sync_target" },
+        { "label": "C", "text": "ring_buffer" },
+        { "label": "D", "text": "pair_matching" }
+      ],
+      "answer": "C",
+      "explanation": "ring_buffer はイベントデータをメモリ上に循環保存します。セッション終了時にデータは消えますが、オーバーヘッドが低くリアルタイム観察に適しています。また Azure SQL Database でも使用可能です。\n\netw_classic_sync_target と pair_matching は SQL Server 専用であり、Azure SQL Database では使用できません。",
+      "explanation_table": [
+        { "label": "A", "text": "永続化が目的。リアルタイム観察には不要なオーバーヘッドが生じる", "correct": false },
+        { "label": "B", "text": "SQL Server 専用。Azure SQL Database では使用不可", "correct": false },
+        { "label": "C", "text": "メモリ上に一時保存。低オーバーヘッドでリアルタイム観察に最適", "correct": true },
+        { "label": "D", "text": "SQL Server 専用。Azure SQL Database では使用不可", "correct": false }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "single",
+      "question": "SQL Server で特定のイベントが 1 時間あたり何回発生しているかを集計したい。イベントの内容ではなく、発生回数だけが必要です。最も適切なターゲットはどれですか？",
+      "choices": [
+        { "label": "A", "text": "histogram" },
+        { "label": "B", "text": "event_counter" },
+        { "label": "C", "text": "ring_buffer" },
+        { "label": "D", "text": "event_file" }
+      ],
+      "answer": "B",
+      "explanation": "event_counter はイベントの発生回数のみをカウントします。イベントデータの内容を保持しないため、「何回発生したか」だけを知りたい場合に最も軽量で適切なターゲットです。\n\nhistogram は列の値ごとの件数を集計しますが、単純な発生回数カウントには event_counter が最適です。",
+      "explanation_table": [
+        { "label": "A", "text": "特定列の値ごとに件数を集計。単純な発生回数カウントとは用途が異なる", "correct": false },
+        { "label": "B", "text": "イベント発生回数のみをカウント。最も軽量で目的に合致", "correct": true },
+        { "label": "C", "text": "イベント内容をメモリに保存。発生回数だけの集計には過剰", "correct": false },
+        { "label": "D", "text": "イベント内容をファイルに保存。発生回数だけの集計には過剰", "correct": false }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "SQL Server でデッドロックを調査するために拡張イベントを設定しています。ロックの取得（lock_acquired）は記録されているが、対応するロック解放（lock_released）が記録されていない状況を検出したい。どのターゲットを使用すべきですか？",
+      "choices": [
+        { "label": "A", "text": "ring_buffer" },
+        { "label": "B", "text": "histogram" },
+        { "label": "C", "text": "pair_matching" },
+        { "label": "D", "text": "event_counter" }
+      ],
+      "answer": "C",
+      "explanation": "pair_matching は対になるイベントのうち、片方だけが発生した場合を検出するターゲットです。「ロック取得はあったがロック解放がない」という状況の特定に最適です。なお pair_matching は SQL Server 専用であり、Azure SQL Database / Managed Instance では使用できません。",
+      "explanation_table": [
+        { "label": "A", "text": "すべてのイベントをメモリに保存するが、対応する片方を検出する機能はない", "correct": false },
+        { "label": "B", "text": "列の値ごとに件数を集計。ペア検出の機能はない", "correct": false },
+        { "label": "C", "text": "対になるイベントの片方だけを検出する専用ターゲット", "correct": true },
+        { "label": "D", "text": "発生回数を数えるだけ。ペア検出の機能はない", "correct": false }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "SQL Server のパフォーマンス問題を調査するために拡張イベントセッションを設定しています。クエリを実行したユーザーの login_name 列の値ごとに、イベントの発生件数を集計したい。どのターゲットを使用すべきですか？",
+      "choices": [
+        { "label": "A", "text": "event_counter" },
+        { "label": "B", "text": "ring_buffer" },
+        { "label": "C", "text": "histogram" },
+        { "label": "D", "text": "pair_matching" }
+      ],
+      "answer": "C",
+      "explanation": "histogram は指定した列（例: login_name）の値ごとにイベントの発生件数を集計するターゲットです。「どのユーザーが何回イベントを発生させたか」を把握するのに最適です。",
+      "explanation_table": [
+        { "label": "A", "text": "イベント全体の発生回数のみをカウント。列の値ごとの集計はできない", "correct": false },
+        { "label": "B", "text": "イベント内容をメモリに保存するが、値ごとの集計機能はない", "correct": false },
+        { "label": "C", "text": "特定の列の値ごとに件数を集計。login_name ごとの集計に最適", "correct": true },
+        { "label": "D", "text": "対になるイベントの片方を検出する。値ごとの集計とは用途が異なる", "correct": false }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "multiple",
+      "answer_count": 2,
+      "question": "Azure SQL Managed Instance 環境で拡張イベントセッションを構成しています。次のターゲットのうち、Azure SQL Managed Instance では使用できないものはどれですか？（該当するものをすべて選択）",
+      "choices": [
+        { "label": "A", "text": "event_file" },
+        { "label": "B", "text": "pair_matching" },
+        { "label": "C", "text": "ring_buffer" },
+        { "label": "D", "text": "etw_classic_sync_target" },
+        { "label": "E", "text": "histogram" }
+      ],
+      "answer": ["B", "D"],
+      "explanation": "pair_matching と etw_classic_sync_target は SQL Server 専用のターゲットです。Azure SQL Database および Azure SQL Managed Instance では使用できません。\n\nevent_file、ring_buffer、histogram、event_counter は SQL Server・Azure SQL Database・Managed Instance のすべてで使用できます。",
+      "explanation_table": [
+        { "label": "A", "text": "SQL Server・Azure SQL DB・Managed Instance すべてで使用可能", "correct": false },
+        { "label": "B", "text": "SQL Server 専用。Managed Instance では使用不可", "correct": true },
+        { "label": "C", "text": "SQL Server・Azure SQL DB・Managed Instance すべてで使用可能", "correct": false },
+        { "label": "D", "text": "SQL Server 専用。Managed Instance では使用不可", "correct": true },
+        { "label": "E", "text": "SQL Server・Azure SQL DB・Managed Instance すべてで使用可能", "correct": false }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "multiple",
+      "answer_count": 2,
+      "question": "SQL Server の拡張イベントターゲットのうち、イベントの処理が同期で行われるものはどれですか？（該当するものをすべて選択）",
+      "choices": [
+        { "label": "A", "text": "event_file" },
+        { "label": "B", "text": "event_counter" },
+        { "label": "C", "text": "ring_buffer" },
+        { "label": "D", "text": "etw_classic_sync_target" },
+        { "label": "E", "text": "histogram" }
+      ],
+      "answer": ["B", "D"],
+      "explanation": "拡張イベントのターゲットには同期処理と非同期処理の 2 種類があります。同期ターゲットはイベント発生時に即時処理するため、パフォーマンスへの影響が大きくなる場合があります。\n\n- **同期**: event_counter、etw_classic_sync_target\n- **非同期**: event_file、ring_buffer、histogram、pair_matching",
+      "explanation_table": [
+        { "label": "A", "text": "非同期。ディスクへの書き込みは非同期で行われる", "correct": false },
+        { "label": "B", "text": "同期。イベント発生時に即時カウントを更新する", "correct": true },
+        { "label": "C", "text": "非同期。メモリへの書き込みは非同期で行われる", "correct": false },
+        { "label": "D", "text": "同期。Windows ETW と連携するため同期処理が必要", "correct": true },
+        { "label": "E", "text": "非同期。集計処理は非同期で行われる", "correct": false }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "SQL Server のパフォーマンス問題を調査しています。SQL Server のイベントデータを Windows の ETW（Event Tracing for Windows）と連携させて、OS レベルのトレースと組み合わせて分析したい。どのターゲットを使用すべきですか？",
+      "choices": [
+        { "label": "A", "text": "ring_buffer" },
+        { "label": "B", "text": "event_file" },
+        { "label": "C", "text": "pair_matching" },
+        { "label": "D", "text": "etw_classic_sync_target" }
+      ],
+      "answer": "D",
+      "explanation": "etw_classic_sync_target は SQL Server の拡張イベントを Windows の ETW（Event Tracing for Windows）と連携させるターゲットです。OS レベルのイベントと SQL Server のイベントを組み合わせた分析が可能になります。このターゲットは SQL Server 専用であり、Azure SQL Database / Managed Instance では使用できません。",
+      "explanation_table": [
+        { "label": "A", "text": "メモリに一時保存。Windows ETW との連携機能はない", "correct": false },
+        { "label": "B", "text": "ファイルに永続保存。Windows ETW との連携機能はない", "correct": false },
+        { "label": "C", "text": "対になるイベントの片方を検出。ETW 連携の機能はない", "correct": false },
+        { "label": "D", "text": "SQL Server イベントを Windows ETW と連携させる専用ターゲット", "correct": true }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "Azure SQL Database で拡張イベントセッションを作成し、.NET アプリケーション（C#）からリアルタイムでイベントデータを受信したい。どのターゲットを使用すべきですか？",
+      "choices": [
+        { "label": "A", "text": "ring_buffer" },
+        { "label": "B", "text": "event_stream" },
+        { "label": "C", "text": "event_file" },
+        { "label": "D", "text": "histogram" }
+      ],
+      "answer": "B",
+      "explanation": "event_stream は .NET プログラム（C# 等）からリアルタイムでイベントデータを受信するためのターゲットです。Azure SQL Database でも使用可能ですが、T-SQL（CREATE EVENT SESSION の ADD TARGET 句）からは追加できず、.NET SDK を通じてのみ利用できます。\n\nring_buffer もリアルタイムに近い観察はできますが、.NET アプリケーションからのリアルタイム受信という要件には event_stream が適切です。",
+      "explanation_table": [
+        { "label": "A", "text": "メモリに一時保存。.NET からのリアルタイム受信には対応していない", "correct": false },
+        { "label": "B", "text": ".NET プログラムからリアルタイムでイベントを受信できる専用ターゲット", "correct": true },
+        { "label": "C", "text": "ファイルに永続保存。リアルタイム受信には適さない", "correct": false },
+        { "label": "D", "text": "列の値ごとに件数を集計。リアルタイム受信の機能はない", "correct": false }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "matching",
+      "question": "各ターゲットと「一言で覚える説明」を正しく組み合わせてください。（前半）",
+      "left": [
+        "event_counter",
+        "event_file",
+        "ring_buffer",
+        "histogram"
+      ],
+      "right": [
+        "特定の列の値ごとに件数を集計",
+        "ファイルに永続保存",
+        "メモリに一時保存（上書き循環、セッション終了で消える）",
+        "回数を数えるだけ"
+      ],
+      "pairs": [
+        [0, 3],
+        [1, 1],
+        [2, 2],
+        [3, 0]
+      ],
+      "explanation": "- **event_counter**: イベントの発生回数だけをカウント。データ内容は保持しない最軽量ターゲット。\n- **event_file**: .xel ファイルにディスク永続保存。セッション終了後も参照できる。\n- **ring_buffer**: メモリ上に循環保存。セッション終了でデータは消える。低オーバーヘッドでリアルタイム観察向き。\n- **histogram**: 指定した列（例: login_name）の値ごとに件数を集計する。"
+    },
+    {
+      "id": 11,
+      "type": "matching",
+      "question": "各ターゲットと「一言で覚える説明」を正しく組み合わせてください。（後半）",
+      "left": [
+        "pair_matching",
+        "etw_classic_sync_target",
+        "event_stream"
+      ],
+      "right": [
+        "SQL Server イベントを Windows の ETW と連携",
+        ".NET プログラム（C# 等）からリアルタイムで受信（T-SQL では追加不可）",
+        "対になるイベントの片方だけを検出（例: ロック取得はあったがロック解放がない）"
+      ],
+      "pairs": [
+        [0, 2],
+        [1, 0],
+        [2, 1]
+      ],
+      "explanation": "- **pair_matching**: ロック取得・解放のように対になるイベントの片方だけを検出する。SQL Server 専用。\n- **etw_classic_sync_target**: SQL Server のイベントを Windows の ETW（Event Tracing for Windows）と連携させる。SQL Server 専用。\n- **event_stream**: .NET SDK（C# 等）からリアルタイムでイベントを受信する。T-SQL の ADD TARGET では追加できない。"
+    },
+    {
+      "id": 12,
+      "type": "multiple",
+      "answer_count": 2,
+      "question": "拡張イベントのターゲットのうち、同期で処理されるものを2つ選んでください。",
+      "choices": [
+        { "label": "A", "text": "event_counter" },
+        { "label": "B", "text": "event_file" },
+        { "label": "C", "text": "ring_buffer" },
+        { "label": "D", "text": "etw_classic_sync_target" },
+        { "label": "E", "text": "histogram" },
+        { "label": "F", "text": "pair_matching" }
+      ],
+      "answer": ["A", "D"],
+      "explanation": "同期ターゲットはイベント発生時に即座に処理するため、パフォーマンスへの影響が大きくなります。\n\n- **同期**: event_counter、etw_classic_sync_target\n- **非同期**: event_file、ring_buffer、histogram、pair_matching、event_stream\n\n「sync」という名前を持つ etw_classic_**sync**_target と、カウントだけして即返す event_counter の2つが同期です。",
+      "explanation_table": [
+        { "label": "A", "text": "同期。イベント発生時に即時カウントを更新する", "correct": true },
+        { "label": "B", "text": "非同期。ディスクへの書き込みは非同期で行われる", "correct": false },
+        { "label": "C", "text": "非同期。メモリへの書き込みは非同期で行われる", "correct": false },
+        { "label": "D", "text": "同期。Windows ETW と連携するため同期処理が必要", "correct": true },
+        { "label": "E", "text": "非同期。集計処理は非同期で行われる", "correct": false },
+        { "label": "F", "text": "非同期。ペア検出処理は非同期で行われる", "correct": false }
+      ]
+    }
+  ]
+}

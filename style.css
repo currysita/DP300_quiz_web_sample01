@@ -65,6 +65,47 @@ body {
   font-size: 0.8rem;
 }
 
+/* ── マッチング問題 ── */
+.matching-columns {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.matching-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.matching-left-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.matching-left-row .choice-btn {
+  flex-shrink: 0;
+}
+
+.matching-badge-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.matching-correct-hint {
+  font-size: 0.75rem;
+  color: #dc3545;
+}
+
+@media (max-width: 767px) {
+  .matching-columns {
+    flex-direction: column;
+  }
+}
+
 /* ── 結果画面 ── */
 .score-display {
   font-size: 2.5rem;

@@ -41,8 +41,21 @@
         <!-- 問題文 -->
         <div id="question-text" class="question-text mb-4"></div>
 
-        <!-- 選択肢 -->
+        <!-- 選択肢（single / multiple 用） -->
         <div id="choices" class="d-grid gap-2"></div>
+
+        <!-- マッチング問題用 -->
+        <div id="matching-area" class="d-none">
+          <div class="matching-columns">
+            <div id="matching-left" class="matching-col"></div>
+            <div id="matching-right" class="matching-col"></div>
+          </div>
+          <div class="d-flex gap-2 mt-3">
+            <button id="btn-matching-reset" class="btn btn-outline-secondary">やり直し</button>
+            <button id="btn-matching-grade" class="btn btn-success" disabled>答え合わせ</button>
+          </div>
+          <div id="matching-score" class="mt-2 fw-bold d-none" aria-live="assertive"></div>
+        </div>
 
       </div>
     </div>
@@ -99,6 +112,15 @@
       let currentIndex = 0;
       let progress = {};   // { "questionId": { answered, correct, selected } }
 
+      // マッチング問題の状態
+      let matchingState = {
+        shuffledRight: [],   // シャッフル後の right テキスト配列
+        shuffleMap: [],      // shuffleMap[i] = 元インデックス
+        selectedLeft: null,  // 現在選択中の左インデックス
+        confirmedPairs: {},  // { 左インデックス: シャッフル後右インデックス }
+        answered: false
+      };
+
       // ── JSON 読み込み ──────────────────────────────
       fetch(meta.file)
         .then(function (r) {
@@ -107,6 +129,18 @@
         })
         .then(function (data) {
           progress = loadProgress(quizId);
+
+          // matching 問題の整合性チェック
+          const invalidMatching = data.questions.filter(function (q) {
+            return q.type === 'matching' && q.left.length !== q.right.length;
+          });
+          if (invalidMatching.length > 0) {
+            const ids = invalidMatching.map(function (q) { return '問題' + q.id; }).join('、');
+            alert('問題データに不備があります（left/right の数が一致しない: ' + ids + '）。');
+            location.href = 'index.html';
+            return;
+          }
+
           const allQuestions = data.questions.filter(function (q) { return !q.skip; });
 
           if (isReviewMode) {
@@ -149,38 +183,15 @@
         const indexLabel = '問題 ' + (index + 1) + ' / ' + questions.length;
         const typeLabel = q.type === 'multiple'
           ? (q.answer_count || 2) + 'つ選択'
-          : '一つ選択';
+          : q.type === 'matching'
+            ? 'マッチング'
+            : '一つ選択';
         $('#question-index').text(indexLabel);
         $('#question-type-badge').text(typeLabel);
         $('#question-badge-group').attr('aria-label', indexLabel + '、' + typeLabel);
 
         // 問題文（改行を保持）
         $('#question-text').text(q.question);
-
-        // 選択肢生成
-        const $choices = $('#choices').empty();
-        q.choices.forEach(function (c) {
-          const $btn = $('<button>')
-            .addClass('btn btn-outline-secondary choice-btn')
-            .attr('data-label', c.label)
-            .text(c.label + '. ' + c.text);
-          if (q.type === 'multiple') {
-            $btn.attr('aria-pressed', 'false');
-          }
-          $choices.append($btn);
-        });
-
-        // 複数選択問題の「採点する」ボタン
-        if (q.type === 'multiple') {
-          const $gradeBtn = $('<button>')
-            .attr('id', 'btn-grade')
-            .addClass('btn btn-success mt-2')
-            .prop('disabled', true)
-            .text('採点する（0 / ' + (q.answer_count || 2) + ' 選択）');
-          $choices.append($gradeBtn);
-        } else {
-          $('#btn-grade').remove();
-        }
 
         // 結果・解説をリセット
         $('#result-message').addClass('d-none').removeClass('alert-success alert-danger').text('');
@@ -191,13 +202,272 @@
           index === questions.length - 1 ? '結果を見る' : '次の問題 →'
         );
 
-        // 解答済みなら前回状態を復元
-        if (rec && rec.answered) {
-          applyResult(q, rec.selected, false);
+        if (q.type === 'matching') {
+          $('#choices').addClass('d-none');
+          $('#matching-area').removeClass('d-none');
+          initMatching(q, rec);
+        } else {
+          $('#matching-area').addClass('d-none');
+          $('#choices').removeClass('d-none');
+
+          // 選択肢生成
+          const $choices = $('#choices').empty();
+          q.choices.forEach(function (c) {
+            const $btn = $('<button>')
+              .addClass('btn btn-outline-secondary choice-btn')
+              .attr('data-label', c.label)
+              .text(c.label + '. ' + c.text);
+            if (q.type === 'multiple') {
+              $btn.attr('aria-pressed', 'false');
+            }
+            $choices.append($btn);
+          });
+
+          // 複数選択問題の「採点する」ボタン
+          if (q.type === 'multiple') {
+            const $gradeBtn = $('<button>')
+              .attr('id', 'btn-grade')
+              .addClass('btn btn-success mt-2')
+              .prop('disabled', true)
+              .text('採点する（0 / ' + (q.answer_count || 2) + ' 選択）');
+            $choices.append($gradeBtn);
+          } else {
+            $('#btn-grade').remove();
+          }
+
+          // 解答済みなら前回状態を復元
+          if (rec && rec.answered) {
+            applyResult(q, rec.selected, false);
+          }
         }
 
         updateNav();
       }
+
+      // ── マッチング問題 ──────────────────────────────
+      function shuffleArray(arr) {
+        const indices = arr.map(function (_, i) { return i; });
+        for (let i = indices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          const tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
+        }
+        return indices;
+      }
+
+      function initMatching(q, rec) {
+        matchingState = {
+          shuffledRight: [],
+          shuffleMap: [],
+          selectedLeft: null,
+          confirmedPairs: {},
+          answered: false
+        };
+
+        $('#matching-score').addClass('d-none').text('');
+        $('#btn-matching-grade').prop('disabled', true);
+
+        if (rec && rec.answered && rec.selected && rec.selected.shuffleMap) {
+          // 解答済み：保存済みのシャッフル順で復元
+          matchingState.shuffleMap = rec.selected.shuffleMap;
+          matchingState.shuffledRight = rec.selected.shuffleMap.map(function (origIdx) {
+            return q.right[origIdx];
+          });
+          rec.selected.pairs.forEach(function (pair) {
+            matchingState.confirmedPairs[pair[0]] = pair[1];
+          });
+          matchingState.answered = true;
+          renderMatchingColumns(q);
+          gradeMatching(q, false);
+        } else {
+          // 未解答：シャッフル
+          matchingState.shuffleMap = shuffleArray(q.right);
+          matchingState.shuffledRight = matchingState.shuffleMap.map(function (origIdx) {
+            return q.right[origIdx];
+          });
+          renderMatchingColumns(q);
+        }
+      }
+
+      function renderMatchingColumns(q) {
+        const $left = $('#matching-left').empty();
+        const $right = $('#matching-right').empty();
+
+        // 左列
+        q.left.forEach(function (text, leftIdx) {
+          const $row = $('<div>').addClass('matching-left-row');
+          const $btn = $('<button>')
+            .addClass('btn btn-outline-secondary choice-btn')
+            .attr('data-left-idx', leftIdx)
+            .text(text);
+          const $badgeWrap = $('<div>').addClass('matching-badge-wrap');
+          $row.append($btn).append($badgeWrap);
+          $left.append($row);
+        });
+
+        // 右列
+        matchingState.shuffledRight.forEach(function (text, shuffledIdx) {
+          const $btn = $('<button>')
+            .addClass('btn btn-outline-secondary choice-btn')
+            .attr('data-right-idx', shuffledIdx)
+            .text(text);
+          $right.append($btn);
+        });
+
+        updateMatchingView(q);
+      }
+
+      function updateMatchingView(q) {
+        const confirmed = matchingState.confirmedPairs;
+        const answered = matchingState.answered;
+
+        // 左列の状態更新
+        $('#matching-left .matching-left-row').each(function () {
+          const leftIdx = parseInt($(this).find('[data-left-idx]').data('left-idx'));
+          const $btn = $(this).find('[data-left-idx]');
+          const $badgeWrap = $(this).find('.matching-badge-wrap');
+          $badgeWrap.empty();
+
+          if (leftIdx in confirmed) {
+            const shuffledRightIdx = confirmed[leftIdx];
+            const rightText = matchingState.shuffledRight[shuffledRightIdx];
+            $btn.prop('disabled', true)
+              .removeClass('btn-outline-secondary btn-primary');
+
+            if (answered) {
+              // 正解判定
+              const origRightIdx = matchingState.shuffleMap[shuffledRightIdx];
+              const correctOrigIdx = q.pairs.find(function (p) { return p[0] === leftIdx; })[1];
+              const isCorrect = origRightIdx === correctOrigIdx;
+              $btn.addClass(isCorrect ? 'btn-outline-secondary' : 'btn-outline-secondary');
+              const badgeClass = isCorrect ? 'badge bg-success' : 'badge bg-danger';
+              const mark = isCorrect ? ' ✓' : ' ✗';
+              $badgeWrap.append($('<span>').addClass(badgeClass).text(rightText + mark));
+              if (!isCorrect) {
+                const correctText = q.right[correctOrigIdx];
+                $badgeWrap.append(
+                  $('<div>').addClass('matching-correct-hint').text('→ 正解: ' + correctText)
+                );
+              }
+            } else {
+              $btn.addClass('btn-outline-secondary');
+              $badgeWrap.append($('<span>').addClass('badge bg-secondary').text(rightText));
+            }
+          } else {
+            $btn.prop('disabled', answered)
+              .removeClass('btn-primary')
+              .addClass('btn-outline-secondary');
+            if (matchingState.selectedLeft === leftIdx) {
+              $btn.removeClass('btn-outline-secondary').addClass('btn-primary');
+            }
+          }
+        });
+
+        // 右列の状態更新
+        const usedRightIndices = Object.values(confirmed);
+        const hasSelectedLeft = matchingState.selectedLeft !== null;
+        $('#matching-right [data-right-idx]').each(function () {
+          const shuffledIdx = parseInt($(this).data('right-idx'));
+          const isUsed = usedRightIndices.includes(shuffledIdx);
+          $(this).prop('disabled', answered || isUsed || !hasSelectedLeft)
+            .removeClass('btn-outline-secondary btn-secondary')
+            .addClass('btn-outline-secondary');
+        });
+      }
+
+      function gradeMatching(q, doSave) {
+        matchingState.answered = true;
+        let correct = 0;
+        q.pairs.forEach(function (pair) {
+          const leftIdx = pair[0];
+          const correctOrigIdx = pair[1];
+          const userShuffledIdx = matchingState.confirmedPairs[leftIdx];
+          if (userShuffledIdx !== undefined && matchingState.shuffleMap[userShuffledIdx] === correctOrigIdx) {
+            correct++;
+          }
+        });
+        const total = q.pairs.length;
+        const allCorrect = correct === total;
+
+        // スコア表示
+        $('#matching-score')
+          .removeClass('d-none text-success text-danger')
+          .addClass(allCorrect ? 'text-success' : 'text-danger')
+          .text(correct + ' / ' + total + ' ペア正解');
+
+        // 結果メッセージ
+        const $msg = $('#result-message').removeClass('d-none alert-success alert-danger');
+        $msg.addClass(allCorrect ? 'alert-success' : 'alert-danger')
+          .text(allCorrect ? '全問正解です！' : '不正解のペアがあります。');
+
+        // 解説表示
+        $('#explanation-answer').html(
+          '<span class="fw-bold">正解数：</span> <span class="badge bg-' +
+          (allCorrect ? 'success' : 'danger') + ' fs-6">' + correct + ' / ' + total + '</span>'
+        );
+        $('#explanation-text').html(marked.parse(q.explanation));
+        $('#explanation-table-wrap').empty();
+        $('#explanation-card').removeClass('d-none');
+        $('#btn-next').prop('disabled', false);
+        $('#btn-matching-grade').prop('disabled', true);
+
+        updateMatchingView(q);
+
+        if (doSave) {
+          const pairs = Object.keys(matchingState.confirmedPairs).map(function (k) {
+            return [parseInt(k), matchingState.confirmedPairs[k]];
+          });
+          progress[String(q.id)] = {
+            answered: true,
+            correct: allCorrect,
+            selected: { pairs: pairs, shuffleMap: matchingState.shuffleMap }
+          };
+          saveProgress(quizId, progress);
+          updateNav();
+        }
+      }
+
+      // 左列クリック
+      $('#matching-left').on('click', '[data-left-idx]', function () {
+        if (matchingState.answered) return;
+        const q = questions[currentIndex];
+        const leftIdx = parseInt($(this).data('left-idx'));
+        if (leftIdx in matchingState.confirmedPairs) return;
+
+        if (matchingState.selectedLeft === leftIdx) {
+          matchingState.selectedLeft = null;
+        } else {
+          matchingState.selectedLeft = leftIdx;
+        }
+        updateMatchingView(q);
+      });
+
+      // 右列クリック
+      $('#matching-right').on('click', '[data-right-idx]', function () {
+        if (matchingState.answered) return;
+        if (matchingState.selectedLeft === null) return;
+        const q = questions[currentIndex];
+        const shuffledIdx = parseInt($(this).data('right-idx'));
+
+        matchingState.confirmedPairs[matchingState.selectedLeft] = shuffledIdx;
+        matchingState.selectedLeft = null;
+
+        const confirmedCount = Object.keys(matchingState.confirmedPairs).length;
+        $('#btn-matching-grade').prop('disabled', confirmedCount < q.left.length);
+
+        updateMatchingView(q);
+      });
+
+      // やり直し
+      $('#btn-matching-reset').on('click', function () {
+        const q = questions[currentIndex];
+        initMatching(q, null);
+      });
+
+      // 答え合わせ
+      $('#btn-matching-grade').on('click', function () {
+        if ($(this).prop('disabled')) return;
+        gradeMatching(questions[currentIndex], true);
+      });
 
       // ── 採点・解説表示 ──────────────────────────────
       function applyResult(q, selected, doSave) {
