@@ -1,0 +1,801 @@
+{
+  "id": "lp01_m01_パフォーマンス監視",
+  "title": "パフォーマンスの監視について説明する",
+  "description": "ラーニングパス「Azure SQL で運用リソースを監視および最適化する」— モジュール1",
+  "range": "問題 1〜38",
+  "questions": [
+    {
+      "id": 1,
+      "type": "single",
+      "question": "Azure 仮想マシン上の SQL Server を監視しています。CPU 使用率やネットワーク使用率など OS レベルのメトリックを Azure Portal で確認したい。どのサービスがこれらのメトリックを収集・表示しますか？",
+      "choices": [
+        { "label": "A", "text": "Azure Log Analytics" },
+        { "label": "B", "text": "Azure Monitor" },
+        { "label": "C", "text": "SQL リソース プロバイダー" },
+        { "label": "D", "text": "Windows パフォーマンス モニター（PerfMon）" }
+      ],
+      "answer": "B",
+      "explanation": "Azure Monitor は、Azure リソースのメトリックの標準セットを収集・表示する包括的なプラットフォーム監視ソリューションです。仮想マシンにエージェントがインストールされると、CPU 使用率・ネットワーク使用率・ディスク読み書きなどの OS メトリックが Azure Monitor に送られます。",
+      "explanation_table": [
+        { "label": "A", "text": "ログデータの保存・クエリ用。メトリックの収集主体ではない", "correct": false },
+        { "label": "B", "text": "VM エージェント経由で OS メトリックを収集・表示するプラットフォーム", "correct": true },
+        { "label": "C", "text": "SQL 固有の設定管理（パッチ適用・ストレージ構成）が目的", "correct": false },
+        { "label": "D", "text": "VM 内部でのローカル収集ツール。Portal での表示は不可", "correct": false }
+      ],
+      "tags": ["監視ツール", "Azure Monitor"]
+    },
+    {
+      "id": 2,
+      "type": "single",
+      "question": "Azure 仮想マシン上の SQL Server で、バッファキャッシュヒット率や 1 秒あたりのバッチ要求数などの SQL Server エンジン固有のカウンターを収集する必要があります。最も適切なツールはどれですか？",
+      "choices": [
+        { "label": "A", "text": "Azure Monitor のメトリック" },
+        { "label": "B", "text": "Azure アクティビティ ログ" },
+        { "label": "C", "text": "Windows パフォーマンス モニター（PerfMon）" },
+        { "label": "D", "text": "Azure SQL Database のクエリ パフォーマンス分析情報" }
+      ],
+      "answer": "C",
+      "explanation": "SQL Server をインストールすると OS にデータベース エンジン独自のパフォーマンス カウンターが登録されます。PerfMon はそれらを直接収集できます。Azure Monitor の標準メトリックは OS レベル（CPU・ディスク・ネットワーク）に限られ、SQL Server エンジン カウンターは含まれません。",
+      "explanation_table": [
+        { "label": "A", "text": "OS レベルのインフラ メトリックのみ。SQL エンジン カウンターは対象外", "correct": false },
+        { "label": "B", "text": "コントロール プレーン操作の記録。パフォーマンス情報は含まない", "correct": false },
+        { "label": "C", "text": "SQL Server エンジン カウンターを含む Windows ネイティブ収集ツール", "correct": true },
+        { "label": "D", "text": "Azure SQL Database 専用機能。IaaS VM の SQL Server には使用不可", "correct": false }
+      ],
+      "tags": ["監視ツール", "PerfMon"]
+    },
+    {
+      "id": 3,
+      "type": "multiple",
+      "answer_count": 2,
+      "question": "Azure Marketplace の SQL Server イメージから作成した VM の「SQL Server 構成」（SQL IaaS エージェント拡張機能）が提供する機能として正しいものを 2 つ選択してください。",
+      "choices": [
+        { "label": "A", "text": "データベース ファイルとトランザクション ログが使用しているストレージ容量の確認" },
+        { "label": "B", "text": "SQL Server エンジンのリアルタイム CPU 使用率のグラフ表示" },
+        { "label": "C", "text": "自動パッチ適用の管理" },
+        { "label": "D", "text": "拡張イベント セッションの作成" }
+      ],
+      "answer": ["A", "C"],
+      "explanation": "SQL IaaS エージェント拡張機能は、データベース/ログ ファイルのストレージ状況確認と、自動パッチ適用・ストレージ構成などの管理機能を提供します。リアルタイム CPU グラフは Azure Monitor、拡張イベントは SSMS 等を使います。",
+      "explanation_table": [
+        { "label": "A", "text": "SQL IaaS エージェント拡張機能の提供機能", "correct": true },
+        { "label": "B", "text": "Azure Monitor / PerfMon の役割", "correct": false },
+        { "label": "C", "text": "SQL IaaS エージェント拡張機能の提供機能", "correct": true },
+        { "label": "D", "text": "SSMS や T-SQL で行う操作", "correct": false }
+      ],
+      "tags": ["監視ツール", "SQL IaaS エージェント"]
+    },
+    {
+      "id": 4,
+      "type": "single",
+      "question": "Azure Monitor の Monitoring Insights を有効にすると、標準エージェントでは収集されない追加メトリックを取得できます。その例として正しいものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "SQL Server の 1 秒あたりのバッチ要求数" },
+        { "label": "B", "text": "ストレージの待機時間と使用可能なメモリ" },
+        { "label": "C", "text": "データベースのデッドロック発生回数" },
+        { "label": "D", "text": "クエリの平均実行時間" }
+      ],
+      "answer": "B",
+      "explanation": "Monitoring Insights を有効にすると、ストレージの待機時間・使用可能なメモリ・ディスク容量など OS/インフラレベルの追加データポイントが収集されます。SQL Server 固有の情報（バッチ要求数・デッドロック・クエリ実行時間）は別ツールで取得します。",
+      "explanation_table": [
+        { "label": "A", "text": "SQL Server エンジン カウンター。PerfMon で収集", "correct": false },
+        { "label": "B", "text": "Monitoring Insights が追加収集するインフラ メトリック", "correct": true },
+        { "label": "C", "text": "拡張イベント等で収集", "correct": false },
+        { "label": "D", "text": "Query Performance Insight / クエリ ストアで収集", "correct": false }
+      ],
+      "tags": ["監視ツール", "Azure Monitor"]
+    },
+    {
+      "id": 5,
+      "type": "single",
+      "question": "Azure Monitor の Monitoring Insights が収集したデータはどこに格納されますか？",
+      "choices": [
+        { "label": "A", "text": "Azure Blob Storage" },
+        { "label": "B", "text": "Azure Log Analytics ワークスペース" },
+        { "label": "C", "text": "Azure Data Explorer" }
+      ],
+      "answer": "B",
+      "explanation": "Azure Monitor の Monitoring Insights が収集したデータは Azure Log Analytics ワークスペースに格納されます。Log Analytics は各種ログを保存・クエリするための Azure の主要ツールであり、KQL（Kusto Query Language）を使って分析できます。",
+      "explanation_table": [
+        { "label": "A", "text": "長期アーカイブ用途。Insights の既定格納先ではない", "correct": false },
+        { "label": "B", "text": "Monitoring Insights データの既定格納先", "correct": true },
+        { "label": "C", "text": "Database Watcher 等が使用する時系列分析ストア", "correct": false }
+      ],
+      "tags": ["監視ツール", "Log Analytics"]
+    },
+    {
+      "id": 6,
+      "type": "single",
+      "question": "Linux OS の Azure VM 上で SQL Server を実行しています。Windows の PerfMon に相当するパフォーマンスデータ収集・可視化環境を構築するためのツールの組み合わせとして正しいものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "Azure Monitor + Log Analytics エージェント" },
+        { "label": "B", "text": "InfluxDB + Collectd + Grafana" },
+        { "label": "C", "text": "SSMS + 拡張イベント" },
+        { "label": "D", "text": "Azure Data Studio + クエリ ストア" }
+      ],
+      "answer": "B",
+      "explanation": "Linux 環境では InfluxDB（時系列 DB）、Collectd（メトリック収集デーモン）、Grafana（可視化 UI）を組み合わせることで、Windows の PerfMon に相当するパフォーマンス データ収集・可視化環境を構築できます。",
+      "explanation_table": [
+        { "label": "A", "text": "OS に依存しない Azure サービスだが、Linux PerfMon の直接代替ではない", "correct": false },
+        { "label": "B", "text": "Linux 上での PerfMon 相当の構成として公式ドキュメントで案内", "correct": true },
+        { "label": "C", "text": "SQL Server 固有のトレース。OS メトリック収集ではない", "correct": false },
+        { "label": "D", "text": "クエリ パフォーマンス分析ツール。OS メトリック収集ではない", "correct": false }
+      ],
+      "tags": ["監視ツール", "Linux"]
+    },
+    {
+      "id": 7,
+      "type": "single",
+      "question": "Azure Monitor のメトリック アラートについて正しい説明はどれですか？",
+      "choices": [
+        { "label": "A", "text": "アラートはサブスクリプション内の単一リソースにのみ設定できる" },
+        { "label": "B", "text": "メトリック データは無期限に保存される" },
+        { "label": "C", "text": "アラートの条件は静的しきい値または動的しきい値で設定できる" },
+        { "label": "D", "text": "アクション グループを設定しないとアラート ルールは作成できない" }
+      ],
+      "answer": "C",
+      "explanation": "Azure Monitor のアラートは静的しきい値（例: CPU が 80% 超）でも、動的しきい値（メトリックの履歴動作を学習して異常を検知）でも設定できます。アクション グループは省略可能で、設定しなくてもアラートは作成・記録されます。メトリックの保存期間は 93 日間です。",
+      "explanation_table": [
+        { "label": "A", "text": "リソース グループ・サブスクリプション単位でも設定可能", "correct": false },
+        { "label": "B", "text": "Azure Monitor メトリックの保存期間は 93 日間", "correct": false },
+        { "label": "C", "text": "静的・動的しきい値の両方をサポート", "correct": true },
+        { "label": "D", "text": "省略可能。未設定でも通知がストレージに記録される", "correct": false }
+      ],
+      "tags": ["Azure Monitor", "アラート"]
+    },
+    {
+      "id": 8,
+      "type": "single",
+      "question": "Azure Monitor のアラート スコープは 3 段階で設定できます。設定できないスコープはどれですか？",
+      "choices": [
+        { "label": "A", "text": "サブスクリプション内の特定リージョンの VM 一覧" },
+        { "label": "B", "text": "サブスクリプション内の特定リソース グループ内の全 VM" },
+        { "label": "C", "text": "複数サブスクリプションにまたがる全 VM" }
+      ],
+      "answer": "C",
+      "explanation": "Azure Monitor のアラート スコープは、1 サブスクリプション内で VM 一覧・リソース グループ・サブスクリプション全体の 3 段階で設定できます。複数サブスクリプションをまたぐスコープは単一アラート ルールとしてはサポートされていません。",
+      "explanation_table": [
+        { "label": "A", "text": "スコープとして設定可能", "correct": false },
+        { "label": "B", "text": "スコープとして設定可能", "correct": false },
+        { "label": "C", "text": "複数サブスクリプションをまたぐスコープはサポートされない", "correct": true }
+      ],
+      "tags": ["Azure Monitor", "アラート"]
+    },
+    {
+      "id": 9,
+      "type": "single",
+      "question": "Azure Monitor のアクション グループで設定できるアクションに含まれないものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "Azure Automation Runbook の実行" },
+        { "label": "B", "text": "Webhook の呼び出し" },
+        { "label": "C", "text": "Azure SQL Database のバックアップの直接実行" },
+        { "label": "D", "text": "Azure Logic App のトリガー" },
+        { "label": "E", "text": "メール / SMS / プッシュ通知の送信" }
+      ],
+      "answer": "C",
+      "explanation": "アクション グループで定義できるアクションには、Automation Runbook・Azure Functions・Logic App・Webhook・ITSM・メール/SMS/プッシュ/音声などがあります。データベース バックアップの直接実行はアクション グループのオプションにはなく、Runbook 等を介して間接的に実行します。",
+      "explanation_table": [
+        { "label": "A", "text": "アクション グループのオプションに含まれる", "correct": false },
+        { "label": "B", "text": "アクション グループのオプションに含まれる", "correct": false },
+        { "label": "C", "text": "アクション グループの直接オプションには含まれない", "correct": true },
+        { "label": "D", "text": "アクション グループのオプションに含まれる", "correct": false },
+        { "label": "E", "text": "アクション グループのオプションに含まれる", "correct": false }
+      ],
+      "tags": ["Azure Monitor", "アラート"]
+    },
+    {
+      "id": 10,
+      "type": "single",
+      "question": "SQL Server のパフォーマンス メトリックのうち、動的管理ビュー（DMV）からのみ取得でき、Windows PerfMon では取得できないものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "CPU 使用率（Processor % Processor Time）" },
+        { "label": "B", "text": "ディスク読み取り/書き込みの平均待機時間" },
+        { "label": "C", "text": "`sys.dm_os_volume_stats` が提供するトランザクション ログの読み書き待機時間" },
+        { "label": "D", "text": "バッファーキャッシュヒット率" }
+      ],
+      "answer": "C",
+      "explanation": "`sys.dm_os_volume_stats` が提供するデータ（トランザクション ログ ファイルの読み取り・書き込み待機時間など）は DMV からしか取得できず、PerfMon では公開されていません。CPU 使用率やバッファーキャッシュヒット率は PerfMon カウンターとして公開されています。",
+      "explanation_table": [
+        { "label": "A", "text": "PerfMon の Processor カウンターで取得可能", "correct": false },
+        { "label": "B", "text": "PerfMon の PhysicalDisk カウンターで取得可能", "correct": false },
+        { "label": "C", "text": "DMV からのみ取得可能", "correct": true },
+        { "label": "D", "text": "PerfMon の SQLServer:Buffer Manager カウンターで取得可能", "correct": false }
+      ],
+      "tags": ["重要メトリック", "DMV"]
+    },
+    {
+      "id": 11,
+      "type": "single",
+      "question": "Azure Monitor のメトリック データの保持期間として正しいものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "30 日間" },
+        { "label": "B", "text": "93 日間（Azure Storage へのアーカイブも可能）" },
+        { "label": "C", "text": "1 年間" }
+      ],
+      "answer": "B",
+      "explanation": "Azure Monitor のアクティブなメトリック データは 93 日間保持されます。長期保存が必要な場合は Azure Storage へのアーカイブが可能です。",
+      "explanation_table": [
+        { "label": "A", "text": "正しくない", "correct": false },
+        { "label": "B", "text": "93 日間保持。Azure Storage へのアーカイブも可能", "correct": true },
+        { "label": "C", "text": "正しくない", "correct": false }
+      ],
+      "tags": ["Azure Monitor", "重要メトリック"]
+    },
+    {
+      "id": 12,
+      "type": "single",
+      "question": "ベースラインメトリックの目的として最も適切な説明はどれですか？",
+      "choices": [
+        { "label": "A", "text": "パフォーマンス問題が発生したときに即座に修正するための手順書" },
+        { "label": "B", "text": "通常状態のパフォーマンスを把握し、正常からの逸脱を検知するためのデータ基準" },
+        { "label": "C", "text": "Azure が自動的に収集するアラートのしきい値の初期設定値" }
+      ],
+      "answer": "B",
+      "explanation": "ベースラインとは、アプリケーションやサーバーの通常状態を理解するためのデータ測定値のコレクションです。長期にわたって収集することで、通常からの変化（異常）を特定できます。ベースラインがないと、問題が発生しても正常範囲なのか異常なのか判断できません。",
+      "explanation_table": [
+        { "label": "A", "text": "ベースラインはデータ基準であり手順書ではない", "correct": false },
+        { "label": "B", "text": "ベースラインの正確な定義", "correct": true },
+        { "label": "C", "text": "Azure が自動設定するものではない", "correct": false }
+      ],
+      "tags": ["ベースライン"]
+    },
+    {
+      "id": 13,
+      "type": "single",
+      "question": "SQL Server の待機統計を確認するために使用する DMV はどれですか？",
+      "choices": [
+        { "label": "A", "text": "`sys.dm_exec_query_stats`" },
+        { "label": "B", "text": "`sys.dm_os_wait_stats`" },
+        { "label": "C", "text": "`sys.dm_io_virtual_file_stats`" },
+        { "label": "D", "text": "`sys.dm_os_volume_stats`" }
+      ],
+      "answer": "B",
+      "explanation": "`sys.dm_os_wait_stats` は、スレッドがリソースの待機に費やした時間を種類別に追跡する DMV です。ベースラインと照合することで、CPU・I/O・ロックなどのボトルネックを特定できます。待機統計は Azure SQL プラットフォーム全体で使用できます。",
+      "explanation_table": [
+        { "label": "A", "text": "クエリの実行統計（CPU 時間・論理読み取り等）", "correct": false },
+        { "label": "B", "text": "待機統計。ベースライン分析の重要な DMV", "correct": true },
+        { "label": "C", "text": "データベース ファイルの I/O 統計", "correct": false },
+        { "label": "D", "text": "ボリュームのストレージ統計", "correct": false }
+      ],
+      "tags": ["ベースライン", "DMV", "待機統計"]
+    },
+    {
+      "id": 14,
+      "type": "single",
+      "question": "PerfMon カウンター `PhysicalDisk(_Total)\\Avg. Disk sec/Read` の通常の許容範囲として正しいものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "値は常に 0 ミリ秒でなければならない" },
+        { "label": "B", "text": "通常は 20 ミリ秒以内が目安で、Premium Storage では 10 ミリ秒未満が期待される" },
+        { "label": "C", "text": "100 ミリ秒以内であれば問題ない" }
+      ],
+      "answer": "B",
+      "explanation": "ディスク読み書きの平均待機時間は通常 20 ミリ秒以内であることが目安です。Azure Premium Storage を使用している場合は 10 ミリ秒未満の値が期待されます。これを超えている場合はストレージ サブシステムのボトルネックが疑われます。",
+      "explanation_table": [
+        { "label": "A", "text": "物理的に不可能。0 は目標値ではない", "correct": false },
+        { "label": "B", "text": "公式ドキュメントの目安値", "correct": true },
+        { "label": "C", "text": "実際にはこの値ではパフォーマンス問題が発生する", "correct": false }
+      ],
+      "tags": ["ベースライン", "PerfMon"]
+    },
+    {
+      "id": 15,
+      "type": "single",
+      "question": "`SQLServer:Buffer Manager\\Page Life Expectancy`（ページの平均寿命）カウンターの正しい解釈はどれですか？",
+      "choices": [
+        { "label": "A", "text": "300 秒を下回ると必ず深刻なメモリ不足を示す" },
+        { "label": "B", "text": "値が高いほど常に良好で、低いほど常に問題がある絶対的指標" },
+        { "label": "C", "text": "長期にわたって監視し、急激な低下をベースラインと比較して評価すべきメトリック" }
+      ],
+      "answer": "C",
+      "explanation": "ページの平均寿命には「この値が正しい」という絶対基準はありません。サーバーのメモリ容量によって正常値が異なるためです。重要なのは長期的なベースラインを把握し、急激な低下が発生したときにその原因（不適切なクエリ・外部メモリ負荷・大規模な整合性チェックなど）を調査することです。",
+      "explanation_table": [
+        { "label": "A", "text": "古い 32 ビット時代の基準。現在は適用されない", "correct": false },
+        { "label": "B", "text": "絶対的な良し悪しはない。ベースラインとの比較が重要", "correct": false },
+        { "label": "C", "text": "正しいアプローチ", "correct": true }
+      ],
+      "tags": ["ベースライン", "PerfMon"]
+    },
+    {
+      "id": 16,
+      "type": "single",
+      "question": "`System\\Processor Queue Length` カウンターの値が継続的に 0 より大きい場合、何を示しますか？",
+      "choices": [
+        { "label": "A", "text": "ディスク I/O のボトルネック" },
+        { "label": "B", "text": "SQL Server のメモリ不足" },
+        { "label": "C", "text": "CPU の負荷が高く、より多くの処理能力が必要な可能性がある" },
+        { "label": "D", "text": "ネットワーク帯域幅の不足" }
+      ],
+      "answer": "C",
+      "explanation": "Processor Queue Length はプロセッサ上の時刻を待機しているスレッドの数を示します。0 より大きい場合は CPU 負荷を示し、ワークロードがより多くの CPU から恩恵を受ける可能性があります。",
+      "explanation_table": [
+        { "label": "A", "text": "PhysicalDisk カウンターで確認する指標", "correct": false },
+        { "label": "B", "text": "Page Life Expectancy やページ ファイルのカウンターで確認", "correct": false },
+        { "label": "C", "text": "Processor Queue Length の正しい解釈", "correct": true },
+        { "label": "D", "text": "ネットワーク カウンターで確認する指標", "correct": false }
+      ],
+      "tags": ["ベースライン", "PerfMon"]
+    },
+    {
+      "id": 17,
+      "type": "single",
+      "question": "適切に構成された SQL Server では `Paging File(_Total)% Usage` カウンターの値について何が期待されますか？",
+      "choices": [
+        { "label": "A", "text": "ピーク時に 50% 程度まで増加するが許容範囲" },
+        { "label": "B", "text": "メモリがディスクにページングされないため、値は低く安定しているべき" },
+        { "label": "C", "text": "値は常に 0 でなければならず、0 以外はシステム障害を示す" }
+      ],
+      "answer": "B",
+      "explanation": "適切に構成された SQL Server では、SQL Server のメモリがディスク上のページ ファイルに移動しません。このカウンターが高い場合は、SQL Server 以外のサービスがシステムメモリを消費し、OS がメモリをディスクにページングしていることを示す可能性があります。",
+      "explanation_table": [
+        { "label": "A", "text": "高いページング使用率はパフォーマンス低下の原因", "correct": false },
+        { "label": "B", "text": "正しい期待値。SQL Server は適切に設定されていればページングされない", "correct": true },
+        { "label": "C", "text": "0 でなくても即障害ではないが、上昇には注意が必要", "correct": false }
+      ],
+      "tags": ["ベースライン", "PerfMon"]
+    },
+    {
+      "id": 18,
+      "type": "single",
+      "question": "拡張イベント セッションでフィルター `sqlserver.is_system = 0` を設定した場合の効果はどれですか？",
+      "choices": [
+        { "label": "A", "text": "システム データベース（master・tempdb・msdb）のみを監視対象にする" },
+        { "label": "B", "text": "システム接続（内部操作）によるイベントを除外し、ユーザー接続のイベントのみを収集する" },
+        { "label": "C", "text": "フィルターをかけたイベントを同期処理に変える" }
+      ],
+      "answer": "B",
+      "explanation": "`sqlserver.is_system = 0` は「システム接続ではない（＝ユーザー/アプリケーション接続）」を意味します。これにより内部システム操作のイベントが除外され、ユーザーのクエリだけが収集されます。データ収集のノイズを減らし、分析効率を高めます。",
+      "explanation_table": [
+        { "label": "A", "text": "is_system フィルターは接続種別であり DB 種別ではない", "correct": false },
+        { "label": "B", "text": "正しい解釈", "correct": true },
+        { "label": "C", "text": "フィルターは処理モードに影響しない", "correct": false }
+      ],
+      "tags": ["拡張イベント", "フィルター"]
+    },
+    {
+      "id": 19,
+      "type": "multiple",
+      "answer_count": 2,
+      "question": "拡張イベント ターゲットのうち、同期処理で動作するものを 2 つ選択してください。",
+      "choices": [
+        { "label": "A", "text": "event_file" },
+        { "label": "B", "text": "event_counter" },
+        { "label": "C", "text": "ring_buffer" },
+        { "label": "D", "text": "ETW（Event Tracing for Windows）" },
+        { "label": "E", "text": "histogram" },
+        { "label": "F", "text": "event_pairing" }
+      ],
+      "answer": ["B", "D"],
+      "explanation": "6 つのターゲットのうち同期処理で動作するのは event_counter と ETW だけです。event_file・ring_buffer・histogram・event_pairing は非同期処理です。",
+      "explanation_table": [
+        { "label": "A", "text": "非同期処理", "correct": false },
+        { "label": "B", "text": "同期処理", "correct": true },
+        { "label": "C", "text": "非同期処理", "correct": false },
+        { "label": "D", "text": "同期処理", "correct": true },
+        { "label": "E", "text": "非同期処理", "correct": false },
+        { "label": "F", "text": "非同期処理", "correct": false }
+      ],
+      "tags": ["拡張イベント", "ターゲット"]
+    },
+    {
+      "id": 20,
+      "type": "single",
+      "question": "拡張イベント セッションに「因果関係の追跡（causality tracking）」を有効にすると、各イベントの出力に何が追加されますか？",
+      "choices": [
+        { "label": "A", "text": "イベントごとのスタック トレース" },
+        { "label": "B", "text": "GUID とシーケンス番号" },
+        { "label": "C", "text": "SQL Server のバージョン情報" }
+      ],
+      "answer": "B",
+      "explanation": "因果関係の追跡を有効にすると、各イベントの出力にグローバル一意識別子（GUID）とシーケンス番号が追加されます。これにより複数のイベントが発生した順序の流れを確認しやすくなります。",
+      "explanation_table": [
+        { "label": "A", "text": "因果関係の追跡の機能ではない", "correct": false },
+        { "label": "B", "text": "正確な説明", "correct": true },
+        { "label": "C", "text": "因果関係の追跡の機能ではない", "correct": false }
+      ],
+      "tags": ["拡張イベント"]
+    },
+    {
+      "id": 21,
+      "type": "single",
+      "question": "Azure SQL Database（PaaS）で拡張イベントの event_file ターゲットを使用した場合、データはどこに書き込まれますか？",
+      "choices": [
+        { "label": "A", "text": "Azure Files" },
+        { "label": "B", "text": "Azure Blob Storage" },
+        { "label": "C", "text": "Azure Data Lake Storage" }
+      ],
+      "answer": "B",
+      "explanation": "Azure SQL Database のような PaaS 環境では、event_file ターゲットのデータはローカル ファイル システムではなく Azure Blob Storage に書き込まれます。オンプレミスや IaaS の SQL Server では .xel ファイルとしてローカル ディスクに保存されます。",
+      "explanation_table": [
+        { "label": "A", "text": "event_file の書き込み先ではない", "correct": false },
+        { "label": "B", "text": "PaaS での event_file の書き込み先", "correct": true },
+        { "label": "C", "text": "event_file の書き込み先ではない", "correct": false }
+      ],
+      "tags": ["拡張イベント", "ターゲット"]
+    },
+    {
+      "id": 22,
+      "type": "single",
+      "question": "Database Watcher の主な利点として正しいものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "SQL Server の実行クエリをリアルタイムでキャンセルできる" },
+        { "label": "B", "text": "サブスクリプション内の中央データ ストアに監視データを収集し、数秒以内にデータを取り込める" },
+        { "label": "C", "text": "SQL Server の自動パッチ適用を管理できる" }
+      ],
+      "answer": "B",
+      "explanation": "Database Watcher の主な機能は、Azure サブスクリプション内の中央データ ストアに監視データを収集・格納できることです。データの収集とインジェストは数秒以内に行われ、低遅延でリアルタイムに近い監視が可能です。",
+      "explanation_table": [
+        { "label": "A", "text": "Database Watcher の機能ではない", "correct": false },
+        { "label": "B", "text": "Database Watcher の主な利点", "correct": true },
+        { "label": "C", "text": "SQL IaaS エージェント拡張機能の機能", "correct": false }
+      ],
+      "tags": ["Database Watcher"]
+    },
+    {
+      "id": 23,
+      "type": "single",
+      "question": "Query Performance Insight が使用できるサービスはどれですか？",
+      "choices": [
+        { "label": "A", "text": "Azure SQL Database" },
+        { "label": "B", "text": "SQL Server on Azure VM（IaaS）" },
+        { "label": "C", "text": "Azure SQL Managed Instance" },
+        { "label": "D", "text": "SQL Server オンプレミス" }
+      ],
+      "answer": "A",
+      "explanation": "Query Performance Insight は Azure SQL Database 専用の機能で、Azure Portal の「インテリジェント パフォーマンス」セクションからアクセスできます。IaaS の SQL Server やオンプレミス、Managed Instance には提供されていません。",
+      "explanation_table": [
+        { "label": "A", "text": "Query Performance Insight の対象サービス", "correct": true },
+        { "label": "B", "text": "対象外。PerfMon や拡張イベントを使用", "correct": false },
+        { "label": "C", "text": "対象外", "correct": false },
+        { "label": "D", "text": "対象外", "correct": false }
+      ],
+      "tags": ["Query Performance Insight"]
+    },
+    {
+      "id": 24,
+      "type": "single",
+      "question": "Query Performance Insight でクエリ ID を確認した後、実行プランなどをさらに詳しく分析するためにどこを参照しますか？",
+      "choices": [
+        { "label": "A", "text": "拡張イベント セッションの ring_buffer" },
+        { "label": "B", "text": "Azure Monitor のメトリック" },
+        { "label": "C", "text": "クエリ ストア" }
+      ],
+      "answer": "C",
+      "explanation": "Query Performance Insight のクエリ ID はクエリ ストア内のクエリ ID と対応しています。QPI から収集したメトリックはクエリ ストア自体の中に配置でき、実行プランなどのより詳細な分析が可能です。",
+      "explanation_table": [
+        { "label": "A", "text": "クエリ ID との連携機能はない", "correct": false },
+        { "label": "B", "text": "クエリレベルの詳細分析はできない", "correct": false },
+        { "label": "C", "text": "QPI のクエリ ID と対応。詳細分析が可能", "correct": true }
+      ],
+      "tags": ["Query Performance Insight", "クエリ ストア"]
+    },
+    {
+      "id": 25,
+      "type": "multiple",
+      "answer_count": 2,
+      "question": "Azure SQL Database の購入モデルとして正しいものを 2 つ選んでください。",
+      "choices": [
+        { "label": "A", "text": "vCore モデル" },
+        { "label": "B", "text": "DTU モデル" },
+        { "label": "C", "text": "eDTU モデル" },
+        { "label": "D", "text": "サーバーレス モデル" }
+      ],
+      "answer": ["A", "B"],
+      "explanation": "Azure SQL Database の購入モデルは vCore（仮想コア）モデルと DTU（Database Transaction Unit）モデルの 2 種類です。eDTU はエラスティックプール向けの単位であり購入モデルの名称ではありません。サーバーレスは vCore モデル内の課金オプションです。",
+      "explanation_table": [
+        { "label": "A", "text": "vCore モデル：コンピュート・メモリ・ストレージを個別に選択できる推奨モデル", "correct": true },
+        { "label": "B", "text": "DTU モデル：CPU・メモリ・I/O をバンドルした事前構成モデル", "correct": true },
+        { "label": "C", "text": "eDTU はエラスティックプール用の単位であり購入モデルの名称ではない", "correct": false },
+        { "label": "D", "text": "サーバーレスは vCore モデル内の課金オプション。独立した購入モデルではない", "correct": false }
+      ],
+      "tags": ["購入モデル", "vCore", "DTU"]
+    },
+    {
+      "id": 26,
+      "type": "single",
+      "question": "DTU（Database Transaction Unit）の定義として最も正確なものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "仮想 CPU コア数を表す単位" },
+        { "label": "B", "text": "CPU・メモリ・読み取り・書き込みを組み合わせたバンドル化された測定値" },
+        { "label": "C", "text": "1 秒あたりのトランザクション処理数" }
+      ],
+      "answer": "B",
+      "explanation": "DTU は CPU・メモリ・読み取り・書き込みを組み合わせた測定値です。これらのリソースの比率は一般的な OLTP ベンチマークワークロードに基づいて設計されており、個別のリソースを選ぶのではなく、まとめて選択します。",
+      "explanation_table": [
+        { "label": "A", "text": "それは vCore の説明", "correct": false },
+        { "label": "B", "text": "DTU の正確な定義", "correct": true },
+        { "label": "C", "text": "DTU はそのような定義ではない", "correct": false }
+      ],
+      "tags": ["購入モデル", "DTU"]
+    },
+    {
+      "id": 27,
+      "type": "multiple",
+      "answer_count": 2,
+      "question": "vCore モデルにあって DTU モデルにない機能を 2 つ選択してください。",
+      "choices": [
+        { "label": "A", "text": "エラスティックプールのサポート" },
+        { "label": "B", "text": "Azure Hybrid Benefit による割引" },
+        { "label": "C", "text": "サーバーレス（自動一時停止・スケーリング）" },
+        { "label": "D", "text": "バックアップの保持期間設定" }
+      ],
+      "answer": ["B", "C"],
+      "explanation": "vCore モデルではソフトウェア アシュアランスを持つ SQL Server ライセンスを使った Azure Hybrid Benefit の割引が利用でき、アイドル時に自動一時停止するサーバーレス オプションも使えます。どちらも DTU モデルには存在しません。",
+      "explanation_table": [
+        { "label": "A", "text": "DTU モデルでも利用可能", "correct": false },
+        { "label": "B", "text": "vCore モデルのみ", "correct": true },
+        { "label": "C", "text": "vCore モデルのみ", "correct": true },
+        { "label": "D", "text": "両モデルで設定可能", "correct": false }
+      ],
+      "tags": ["購入モデル", "vCore", "DTU"]
+    },
+    {
+      "id": 28,
+      "type": "single",
+      "question": "Azure SQL Managed Instance がサポートする購入モデルはどれですか？",
+      "choices": [
+        { "label": "A", "text": "DTU モデルのみ" },
+        { "label": "B", "text": "vCore モデルのみ" }
+      ],
+      "answer": "B",
+      "explanation": "Azure SQL Managed Instance は vCore モデルのみをサポートしています。DTU モデルは Azure SQL Database 単体（エラスティックプール含む）でのみ使用できます。",
+      "explanation_table": [
+        { "label": "A", "text": "Managed Instance は DTU 非対応", "correct": false },
+        { "label": "B", "text": "vCore モデルのみサポート", "correct": true }
+      ],
+      "tags": ["購入モデル", "Managed Instance"]
+    },
+    {
+      "id": 29,
+      "type": "single",
+      "question": "vCore モデルのサービス層「Hyperscale」に当てはまらない説明はどれですか？",
+      "choices": [
+        { "label": "A", "text": "最大ストレージは 128 TB" },
+        { "label": "B", "text": "コンピュートとストレージを独立してスケーリングできる" },
+        { "label": "C", "text": "Azure SQL Managed Instance でも利用できる" }
+      ],
+      "answer": "C",
+      "explanation": "Hyperscale は Azure SQL Database 専用のサービス層です。Azure SQL Managed Instance では利用できません。また Hyperscale は In-Memory OLTP 非対応です。最大 128 TB・独立スケーリングは正しい特徴です。",
+      "explanation_table": [
+        { "label": "A", "text": "Hyperscale の正しい特徴", "correct": false },
+        { "label": "B", "text": "Hyperscale の正しい特徴", "correct": false },
+        { "label": "C", "text": "誤り。Hyperscale は Azure SQL Database のみ", "correct": true }
+      ],
+      "tags": ["購入モデル", "vCore", "Hyperscale"]
+    },
+    {
+      "id": 30,
+      "type": "single",
+      "question": "vCore モデルの「サーバーレス（Serverless）」コンピュートの特徴として正しいものはどれですか？",
+      "choices": [
+        { "label": "A", "text": "ストレージも自動的にゼロにスケールダウンする" },
+        { "label": "B", "text": "コンピュートが自動スケーリングされ、アイドル時は一時停止して秒単位で課金される" },
+        { "label": "C", "text": "Hyperscale サービス層でのみ使用できる" },
+        { "label": "D", "text": "DTU モデルでも同様の機能が利用できる" }
+      ],
+      "answer": "B",
+      "explanation": "サーバーレスはアクティビティに応じてコンピュートが自動スケーリングされ、アイドル期間は自動一時停止します。課金は使用した分を秒単位で行います（プロビジョニング型は時間単位で固定課金）。サーバーレスは vCore モデル専用で、DTU モデルには存在しません。",
+      "explanation_table": [
+        { "label": "A", "text": "ストレージは一時停止中も保持され課金が続く", "correct": false },
+        { "label": "B", "text": "サーバーレスの正確な説明", "correct": true },
+        { "label": "C", "text": "General Purpose でも使用可能", "correct": false },
+        { "label": "D", "text": "DTU モデルにサーバーレスはない", "correct": false }
+      ],
+      "tags": ["購入モデル", "vCore", "サーバーレス"]
+    },
+    {
+      "id": 31,
+      "type": "matching",
+      "question": "拡張イベントの 4 つのチャネルと、その用途・対象を正しく組み合わせてください。",
+      "left": [
+        "管理者（Admin）",
+        "操作（Operational）",
+        "分析（Analytic）",
+        "デバッグ（Debug）"
+      ],
+      "right": [
+        "パフォーマンス イベントを大量に発行。ストアド プロシージャやクエリ実行のトレースに使用",
+        "Microsoft サポートによるトラブルシューティング専用。完全には文書化されていない",
+        "管理者が実行できる明確なアクション内の問題。デッドロック XML レポートの生成など",
+        "分析・診断・一般的な問題に使用。フェールオーバーなど事象に基づくアクションのトリガーに使用"
+      ],
+      "pairs": [
+        [0, 2],
+        [1, 3],
+        [2, 0],
+        [3, 1]
+      ],
+      "explanation": "Admin は管理者向けの明確な問題（デッドロック XML など）、Operational は診断・アクションのトリガー（フェールオーバー検知など）、Analytic はパフォーマンス トレース（大量発行）、Debug は Microsoft サポート専用です。",
+      "tags": ["拡張イベント"]
+    },
+    {
+      "id": 32,
+      "type": "matching",
+      "question": "拡張イベントの 6 つのターゲットと、その処理方式・特徴を正しく組み合わせてください。",
+      "left": [
+        "event_file",
+        "ring_buffer",
+        "event_counter",
+        "ETW（Event Tracing for Windows）",
+        "histogram",
+        "event_pairing"
+      ],
+      "right": [
+        "同期処理。SQL Server イベントを Windows OS イベントと関連付ける",
+        "非同期処理。メモリ内に循環保存。セッション終了後にデータが消える",
+        "同期処理。イベントの発生回数のみをカウントする",
+        "非同期処理。ディスク上のファイル（PaaS では Blob Storage）に永続保存",
+        "非同期処理。特定の列またはアクションの値ごとにカウントを集計する",
+        "非同期処理。ペアで発生するはずのイベントの不一致（例: ロック取得のみでロック解放なし）を検出"
+      ],
+      "pairs": [
+        [0, 3],
+        [1, 1],
+        [2, 2],
+        [3, 0],
+        [4, 4],
+        [5, 5]
+      ],
+      "explanation": "event_file は非同期でディスクに永続保存、ring_buffer は非同期でメモリに循環保存、event_counter は同期で件数カウントのみ、ETW は同期で Windows OS イベントと連携、histogram は非同期で列値ごとに集計、event_pairing は非同期でペアの不一致を検出します。",
+      "tags": ["拡張イベント", "ターゲット"]
+    },
+    {
+      "id": 33,
+      "type": "matching",
+      "question": "vCore モデルの 3 つのサービス層と、その代表的な特徴を正しく組み合わせてください。",
+      "left": [
+        "General Purpose",
+        "Business Critical",
+        "Hyperscale"
+      ],
+      "right": [
+        "ローカル SSD を使用。読み書き 1〜2 ms の低レイテンシー。読み取り専用セカンダリを追加費用なく利用可能",
+        "最大 128 TB のストレージ。コンピュートとストレージを独立してスケーリング可能",
+        "リモート Premium Storage を使用。バランス型でコスト効率が高い汎用層"
+      ],
+      "pairs": [
+        [0, 2],
+        [1, 0],
+        [2, 1]
+      ],
+      "explanation": "General Purpose はリモートストレージの汎用層、Business Critical はローカル SSD による低レイテンシー・読み取りセカンダリ付き高可用性層、Hyperscale は最大 128 TB の大容量・独立スケーリング層です。",
+      "tags": ["購入モデル", "vCore"]
+    },
+    {
+      "id": 34,
+      "type": "matching",
+      "question": "DTU モデルの 3 つのサービス層と、その代表的な特徴を正しく組み合わせてください。",
+      "left": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ],
+      "right": [
+        "最大 4,000 DTU。ローカル SSD。I/O 待機時間 2 ms。In-Memory OLTP 対応",
+        "最大 5 DTU。開発・テスト・低頻度アクセス向け小規模 DB 用",
+        "最大 3,000 DTU。一般的な本番ワークロード向け"
+      ],
+      "pairs": [
+        [0, 1],
+        [1, 2],
+        [2, 0]
+      ],
+      "explanation": "Basic は最大 5 DTU の小規模・開発用、Standard は最大 3,000 DTU の一般本番用、Premium は最大 4,000 DTU でローカル SSD・低レイテンシー・In-Memory OLTP 対応の高性能層です。",
+      "tags": ["購入モデル", "DTU"]
+    },
+    {
+      "id": 35,
+      "type": "matching",
+      "question": "各監視ツール・サービスと、その主な役割または格納先を正しく組み合わせてください。",
+      "left": [
+        "Windows PerfMon",
+        "Azure Monitor",
+        "Azure Log Analytics ワークスペース",
+        "Database Watcher",
+        "Query Performance Insight"
+      ],
+      "right": [
+        "Azure SQL Database 専用。リソース消費の多いクエリを上位 5 件表示。クエリ ストアと連携",
+        "Azure SQL Database / Managed Instance 専用の監視ソリューション。Azure Data Explorer または Microsoft Fabric にデータを格納",
+        "VM エージェント経由で OS レベルのメトリック（CPU・ネットワーク・ディスク）を収集・表示",
+        "SQL Server エンジン固有のパフォーマンス カウンター（バッファキャッシュヒット率・バッチ要求数など）を収集",
+        "Azure Monitor の Monitoring Insights が収集したデータの格納先。KQL でクエリ可能"
+      ],
+      "pairs": [
+        [0, 3],
+        [1, 2],
+        [2, 4],
+        [3, 1],
+        [4, 0]
+      ],
+      "explanation": "PerfMon は SQL Server エンジン カウンター収集、Azure Monitor は OS メトリック収集、Log Analytics は Monitoring Insights データの格納先、Database Watcher は PaaS 専用監視ソリューション、QPI は Azure SQL Database 専用のクエリ分析機能です。",
+      "tags": ["監視ツール"]
+    },
+    {
+      "id": 36,
+      "type": "matching",
+      "question": "次の PerfMon カウンターと、そのカウンターが示す内容を正しく組み合わせてください。",
+      "left": [
+        "Processor(_Total)\\% Processor Time",
+        "Paging File(_Total)\\% Usage",
+        "PhysicalDisk(_Total)\\Avg. Disk sec/Read",
+        "System\\Processor Queue Length",
+        "SQLServer:Buffer Manager\\Page Life Expectancy",
+        "SQLServer:SQL Statistics\\Batch Requests/sec"
+      ],
+      "right": [
+        "プロセッサ上の時刻を待機しているスレッド数。0 より大きければ CPU 負荷を示す",
+        "SQL Server がページをメモリに保持している期間の目安。急激な低下はメモリ負荷を示す",
+        "サーバー全体の CPU 使用率。ワークロードの全体的な負荷を示す",
+        "適切な SQL Server 構成では低く安定しているべき。高い場合は OS のメモリ不足を示す",
+        "1 秒あたりの SQL バッチ処理数。ビジー度の一貫性評価に使用",
+        "ディスク読み取りの平均待機時間。通常 20 ms 以内、Premium Storage は 10 ms 未満が目安"
+      ],
+      "pairs": [
+        [0, 2],
+        [1, 3],
+        [2, 5],
+        [3, 0],
+        [4, 1],
+        [5, 4]
+      ],
+      "explanation": "各カウンターはそれぞれ異なるリソースのボトルネックを示します。CPU・メモリ・ディスク・SQL エンジンの各側面を組み合わせて監視することでパフォーマンスの全体像を把握できます。",
+      "tags": ["ベースライン", "PerfMon"]
+    },
+    {
+      "id": 37,
+      "type": "matching",
+      "question": "Database Watcher の構成要素と、その役割を正しく組み合わせてください。",
+      "left": [
+        "SQL ターゲット",
+        "データ ストア",
+        "ダッシュボード",
+        "アラート ルール"
+      ],
+      "right": [
+        "Azure portal でリソースの詳細な分析情報を提供するビュー",
+        "Azure SQL Database または Azure SQL Managed Instance の監視対象",
+        "一般的なアラートのパラメーター化テンプレートとカスタム アラートの作成",
+        "Azure Data Explorer または Microsoft Fabric Real-Time Analytics。収集データの格納・分析先"
+      ],
+      "pairs": [
+        [0, 1],
+        [1, 3],
+        [2, 0],
+        [3, 2]
+      ],
+      "explanation": "Database Watcher はSQL ターゲット（監視対象）・データ ストア（格納先）・ダッシュボード（可視化）・アラート ルール（通知）の 4 要素で構成されます。",
+      "tags": ["Database Watcher"]
+    },
+    {
+      "id": 38,
+      "type": "matching",
+      "question": "Azure SQL Database の購入モデル・サービス層と、その代表的な特徴を正しく組み合わせてください。",
+      "left": [
+        "Basic（DTU）",
+        "Standard（DTU）",
+        "Premium（DTU）",
+        "General Purpose（vCore）",
+        "Business Critical（vCore）",
+        "Hyperscale（vCore）"
+      ],
+      "right": [
+        "ローカル SSD・読み書き 1〜2 ms の低レイテンシー。読み取り専用セカンダリを追加費用なく利用可能",
+        "最大 5 DTU。開発・テスト・低頻度アクセス向けの小規模 DB 用",
+        "最大 128 TB。コンピュートとストレージを独立してスケーリング可能",
+        "最大 4,000 DTU。ローカル SSD・In-Memory OLTP 対応の高性能層",
+        "最大 3,000 DTU。リモートストレージ。一般的な本番ワークロード向け",
+        "リモート Premium Storage。バランス型でコスト効率が高い vCore 汎用層"
+      ],
+      "pairs": [
+        [0, 1],
+        [1, 4],
+        [2, 3],
+        [3, 5],
+        [4, 0],
+        [5, 2]
+      ],
+      "explanation": "DTU モデル: Basic（最大5DTU・小規模用）、Standard（最大3,000DTU・一般本番用）、Premium（最大4,000DTU・ローカルSSD・In-Memory OLTP）。vCore モデル: General Purpose（リモートストレージ・汎用）、Business Critical（ローカルSSD・低レイテンシー・読み取りセカンダリ）、Hyperscale（最大128TB・独立スケーリング）。",
+      "tags": ["購入モデル", "vCore", "DTU"]
+    }
+  ]
+}
